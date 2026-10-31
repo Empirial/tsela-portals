@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-primary-container":"#78849c","surface-container-lowest":"#ffffff","on-primary-fixed-variant":"#3b475c","on-error":"#ffffff","surface-bright":"#f8f9ff","on-background":"#121c2a","secondary-container":"#0266ff","outline":"#75777d","tertiary-fixed-dim":"#ffb95f","on-secondary":"#ffffff","on-tertiary-fixed":"#2a1700","secondary-fixed":"#dae1ff","on-tertiary-fixed-variant":"#653e00","on-tertiary-container":"#b87500","surface-tint":"#525f75","surface-dim":"#d0dbed","on-secondary-container":"#f9f7ff","error":"#ba1a1a","secondary":"#0050cc","inverse-surface":"#27313f","tertiary-container":"#2a1700","secondary-fixed-dim":"#b3c5ff","surface-container-low":"#eff4ff","primary-fixed-dim":"#bac7e1","primary-fixed":"#d6e3fd","surface-variant":"#d9e3f6","inverse-on-surface":"#eaf1ff","primary":"#000000","surface":"#f8f9ff","inverse-primary":"#bac7e1","on-secondary-fixed":"#001849","background":"#f8f9ff","outline-variant":"#c5c6cd","on-tertiary":"#ffffff","error-container":"#ffdad6","primary-container":"#0f1c2f","on-primary":"#ffffff","surface-container":"#e6eeff","tertiary-fixed":"#ffddb8","surface-container-high":"#dee9fc","on-surface-variant":"#44474c","surface-container-highest":"#d9e3f6","on-surface":"#121c2a","on-error-container":"#93000a","on-secondary-fixed-variant":"#003fa4","on-primary-fixed":"#0f1c2f","tertiary":"#000000"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-md":"1rem","margin":"1rem","space-lg":"1.5rem","gutter-mobile":"0.75rem","margin-mobile":"0.75rem","space-xs":"0.25rem","space-sm":"0.5rem","gutter":"1rem","space-xl":"2rem"},"fontFamily":{"label-sm":["Inter"],"body-sm":["Inter"],"headline-xl-mobile":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"label-lg":["Inter"],"headline-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"body-lg":["Inter"],"headline-xl":["Plus Jakarta Sans"],"label-md":["Inter"],"body-md":["Inter"],"headline-sm":["Plus Jakarta Sans"]},"fontSize":{"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-xl-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"800"}],"headline-lg-mobile":["22px",{"lineHeight":"30px","letterSpacing":"-0.015em","fontWeight":"700"}],"label-lg":["15px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"headline-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.015em","fontWeight":"700"}],"headline-md":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-xl":["36px",{"lineHeight":"44px","letterSpacing":"-0.02em","fontWeight":"800"}],"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-sm":["18px",{"lineHeight":"24px","fontWeight":"600"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col flex-1 overflow-y-auto"><div class="h-16 px-space-lg flex items-center justify-between bg-surface-container-lowest"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center"><span class="material-symbols-outlined text-secondary-fixed text-[22px]">local_shipping</span></div><div><span class="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight block leading-none">TSELA</span><span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest block leading-none mt-space-xs">Command Console</span></div></div><span class="w-2 h-2 rounded-full bg-secondary-container ring-4 ring-secondary-fixed"></span></div><div class="px-space-md py-space-sm"><div class="px-space-sm py-space-xs font-label-sm text-label-sm text-outline uppercase tracking-wider">Operational Control</div></div><nav class="px-space-md space-y-space-xs" data-active-classes="bg-secondary text-on-secondary font-bold rounded-lg shadow-[0_1px_3px_rgba(14,27,46,0.06)]"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="overview-analytics" href="#"><span class="material-symbols-outlined text-[20px]">insights</span>Overview &amp; Analytics</a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="jobs-dispatches" href="#"><div class="flex items-center gap-space-md"><span class="material-symbols-outlined text-[20px]">emergency_heat</span>Jobs &amp; Dispatches</div><span class="px-space-xs py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm">Live</span></a></nav><div class="px-space-md pt-space-lg pb-space-xs"><div class="px-space-sm py-space-xs font-label-sm text-label-sm text-outline uppercase tracking-wider">Network &amp; Partners</div></div><nav class="px-space-md space-y-space-xs" data-active-classes="bg-secondary text-on-secondary font-bold rounded-lg shadow-[0_1px_3px_rgba(14,27,46,0.06)]"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="fleets" href="#"><span class="material-symbols-outlined text-[20px]">directions_boat</span>Commercial Fleets</a><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm transition-colors bg-secondary text-on-secondary font-bold rounded-lg shadow-[0_1px_3px_rgba(14,27,46,0.06)]" data-path="repairers" href="#"><span class="material-symbols-outlined text-[20px]">build_circle</span>Tyre Repairers</a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="drivers" href="#"><span class="material-symbols-outlined text-[20px]">id_card</span>Fleet Drivers</a></nav><div class="px-space-md pt-space-lg pb-space-xs"><div class="px-space-sm py-space-xs font-label-sm text-label-sm text-outline uppercase tracking-wider">Commercial &amp; Admin</div></div><nav class="px-space-md space-y-space-xs" data-active-classes="bg-secondary text-on-secondary font-bold rounded-lg shadow-[0_1px_3px_rgba(14,27,46,0.06)]"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="payments-payouts" href="#"><span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>Payments &amp; Payouts</a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="fleet-subscriptions" href="#"><span class="material-symbols-outlined text-[20px]">credit_score</span>Subscriptions</a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="platform-settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span>Platform Settings</a></nav></div><div class="p-space-md bg-surface-container-low mx-space-md mb-space-md rounded-xl shadow-[0_1px_3px_rgba(14,27,46,0.06)]"><div class="flex items-center gap-space-sm"><div class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></div><span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider">Corridor Ops</span></div><p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs">N1, N3 &amp; N4 Real-time Dispatch Grid Active</p></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm bg-surface-container-lowest px-space-md py-1.5 rounded-full shadow-[0_1px_3px_rgba(14,27,46,0.06)]"><span class="w-2.5 h-2.5 rounded-full bg-secondary-container"></span><span class="font-label-sm text-label-sm text-on-surface font-semibold">All South African Corridors Operational</span></div><div class="hidden xl:flex items-center gap-space-sm text-on-surface-variant font-body-sm text-body-sm"><span class="material-symbols-outlined text-[18px]">fmd_good</span><span>Gauteng • Durban • Cape Town Corridors</span></div></div><div class="flex items-center gap-space-md"><div class="relative hidden md:block w-72"><span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span><input class="w-full h-10 pl-10 pr-space-md bg-surface-container-lowest rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary transition-all shadow-[0_1px_3px_rgba(14,27,46,0.06)]" placeholder="Search jobs, VIN, reg, partners..." type="text"/></div><div class="flex items-center bg-surface-container-lowest rounded-lg p-1 shadow-[0_1px_3px_rgba(14,27,46,0.06)]"><button class="px-space-sm py-1 rounded bg-primary-container text-on-primary font-label-sm text-label-sm" type="button">ZAR (R)</button><button class="px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm" type="button">USD ($)</button></div><button class="relative w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors shadow-[0_1px_3px_rgba(14,27,46,0.06)]" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="flex items-center gap-space-sm pl-space-sm"><div class="text-right hidden sm:block"><div class="font-label-md text-label-md text-on-surface leading-tight">Lufuno Mphela</div><div class="font-label-sm text-label-sm text-secondary leading-tight">Super Admin</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 px-gutter bg-surface min-h-screen"><div class="flex flex-col w-full">
+<div class="space-y-space-lg pb-space-xl">
+<!-- Top Alert Banner: Pending SABS & VAT Approvals -->
+<div class="w-full bg-tertiary-fixed text-on-tertiary-fixed px-space-lg py-space-md rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[24px]">verified_user</span>
+</div>
+<div>
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm font-bold tracking-tight">Compliance Verification Queue</span>
+<span class="px-space-xs py-0.5 rounded-full bg-tertiary-container text-tertiary-fixed text-label-sm font-label-sm uppercase">Urgent Action</span>
+</div>
+<p class="font-body-md text-body-md text-on-tertiary-fixed-variant mt-0.5">3 Repairer Verification Applications Awaiting SABS &amp; VAT Approval along the N1/N3 transport corridors.</p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0 self-end md:self-auto">
+<button class="px-space-md py-2 rounded-lg bg-tertiary-container text-tertiary-fixed hover:bg-black hover:text-white font-label-md text-label-md transition-colors flex items-center gap-space-xs" onclick="document.getElementById('compliance-drawer').classList.remove('translate-x-full')" type="button">
+<span>Review Karoo Rescue</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Telemetry Header & Moderation Segmentation Bar -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-lg">
+<div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider mb-1">
+<span>National Operator Gateway</span>
+<span>/</span>
+<span class="text-secondary font-bold">Partner Governance</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl font-extrabold text-on-surface tracking-tight">Partner Moderation &amp; Fleet Compliance</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Audit certifications, sanction errant repair units, enforce corridor geo-fencing, and issue instant payouts credentials.</p>
+</div>
+<!-- Quick Metrics Counter Group -->
+<div class="flex items-center gap-space-sm bg-surface-container-lowest p-1.5 rounded-xl shadow-sm self-start lg:self-auto">
+<div class="px-space-md py-2 bg-surface-container-low rounded-lg text-center min-w-[100px]">
+<span class="block font-headline-md text-headline-md font-bold text-on-surface leading-tight">98</span>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Fitters</span>
+</div>
+<div class="px-space-md py-2 bg-surface-container-low rounded-lg text-center min-w-[100px]">
+<span class="block font-headline-md text-headline-md font-bold text-on-surface leading-tight">46</span>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Fleets</span>
+</div>
+<div class="px-space-md py-2 bg-surface-container-low rounded-lg text-center min-w-[100px]">
+<span class="block font-headline-md text-headline-md font-bold text-secondary leading-tight">312</span>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Drivers</span>
+</div>
+</div>
+</div>
+<!-- Segmented Segment Tabs & Global Actions -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md bg-surface-container-lowest p-2 rounded-xl shadow-sm">
+<div class="flex items-center gap-1 overflow-x-auto pb-1 md:pb-0" id="segmentTabs">
+<button class="tab-btn active px-space-md py-2.5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md flex items-center gap-space-sm shrink-0 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">build_circle</span>
+<span>Mobile Repairers</span>
+<span class="px-space-xs py-0.5 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm">98</span>
+</button>
+<button class="tab-btn px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md flex items-center gap-space-sm shrink-0 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">directions_boat</span>
+<span>Fleet Companies</span>
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm">46</span>
+</button>
+<button class="tab-btn px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md flex items-center gap-space-sm shrink-0 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">id_card</span>
+<span>Drivers Directory</span>
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm">312</span>
+</button>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-1.5 rounded-lg">
+<span class="w-2.5 h-2.5 rounded-full bg-error"></span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">2 Suspended</span>
+</div>
+<div class="flex items-center gap-space-xs bg-tertiary-fixed px-space-sm py-1.5 rounded-lg">
+<span class="w-2.5 h-2.5 rounded-full bg-on-tertiary-container animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-tertiary-fixed font-semibold">3 Pending Review</span>
+</div>
+</div>
+</div>
+<!-- Active Filters & Corridor Geo-Tag Ribbon -->
+<div class="flex flex-wrap items-center justify-between gap-space-md px-1">
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="bg-surface-container-lowest px-space-md py-2 rounded-lg shadow-sm flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-outline text-[18px]">filter_alt</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Status:</span>
+<select class="bg-transparent font-label-md text-label-md text-on-surface focus:outline-none cursor-pointer">
+<option>All Statuses (98)</option>
+<option>Pending Verification (3)</option>
+<option>Active Commercial (93)</option>
+<option>Suspended / Disciplinary (2)</option>
+</select>
+</div>
+<div class="bg-surface-container-lowest px-space-md py-2 rounded-lg shadow-sm flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-outline text-[18px]">route</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Corridor:</span>
+<select class="bg-transparent font-label-md text-label-md text-on-surface focus:outline-none cursor-pointer">
+<option>All National Corridors</option>
+<option>N1 Gauteng - Polokwane</option>
+<option>N3 Durban Port Express</option>
+<option>N4 Maputo Heavy Freight</option>
+<option>Karoo Central Hex Hex River</option>
+</select>
+</div>
+<div class="bg-surface-container-lowest px-space-md py-2 rounded-lg shadow-sm flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-outline text-[18px]">security</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Compliance:</span>
+<select class="bg-transparent font-label-md text-label-md text-on-surface focus:outline-none cursor-pointer">
+<option>All Accreditations</option>
+<option>SABS Heavy Certified Only</option>
+<option>SARS VAT Verified</option>
+<option>Hazmat Flare Certified</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="h-10 px-space-md rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container shadow-sm font-label-md text-label-md flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span>Corridor Geo-Radius Mass Edit</span>
+</button>
+<button class="h-10 px-space-md rounded-lg bg-secondary text-on-secondary hover:bg-secondary-container shadow-sm font-label-md text-label-md flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>Invite Mobile Partner</span>
+</button>
+</div>
+</div>
+<!-- Primary Table: Rich Inspection Cards -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-space-md px-space-lg">Business &amp; Base Station</th>
+<th class="py-space-md px-space-md">Mobile Van Fleet</th>
+<th class="py-space-md px-space-md">Geo-Radius Coverage</th>
+<th class="py-space-md px-space-md">Completed Rigs &amp; Rating</th>
+<th class="py-space-md px-space-md">Compliance Badges</th>
+<th class="py-space-md px-space-md">Settlement Payout</th>
+<th class="py-space-md px-space-md">Account State</th>
+<th class="py-space-md px-space-lg text-right">Moderation Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 font-body-md text-body-md text-on-surface">
+<!-- Row 1: Apex 24/7 Mobile Tyre Fitters (Active Verified) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center font-headline-sm text-headline-sm font-bold text-secondary shrink-0">
+                    AP
+                  </div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Apex 24/7 Mobile Tyre Fitters</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" title="Vetted Partner">verified</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant block mt-0.5">Kempton Park Base • Ekurhuleni East, GP</span>
+<span class="font-label-sm text-label-sm text-outline mt-1 inline-block">CIPC: 2018/482019/07 • Reg Tyre-RSA-994</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="flex items-center gap-space-sm">
+<div class="px-space-sm py-1 rounded bg-surface-container font-headline-sm text-headline-sm font-bold text-on-surface">
+                    6
+                  </div>
+<div class="leading-tight">
+<span class="font-label-sm text-label-sm text-on-surface block font-semibold">High-Pressure Vans</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">4 On Road • 2 Staged</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="inline-flex flex-col">
+<div class="flex items-center gap-1 font-label-md text-label-md font-semibold text-on-surface">
+<span class="material-symbols-outlined text-secondary text-[16px]">radar</span>
+<span>50km N3 Corridor</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline mt-0.5">Hex ID: GP-N3-CORR-01</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div>
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">4.9</span>
+<div class="flex text-tertiary-fixed-dim">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">184 Heavy Rig Repairs</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="flex flex-wrap gap-1 max-w-[210px]">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> SABS Certified
+                  </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> SARS VAT
+                  </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Safety Flares
+                  </span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="font-body-sm text-body-sm">
+<span class="font-label-md text-label-md font-bold text-on-surface block">First National Bank</span>
+<span class="text-outline">Acc: •••• 9204</span>
+<span class="text-secondary font-label-sm text-label-sm block mt-0.5">Instant Pay Active</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<span class="px-space-sm py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase font-bold inline-flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+                  Active
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right align-middle">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="w-9 h-9 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-colors" title="View Compliance Documents" type="button">
+<span class="material-symbols-outlined text-[18px]">folder_shared</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-colors" title="Adjust Service Radius" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-surface-container text-error hover:bg-error-container flex items-center justify-center transition-colors" title="Suspend Account" type="button">
+<span class="material-symbols-outlined text-[18px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Karoo Roadside Rescue (Pending Review - Drawer Trigger) -->
+<tr class="bg-surface-container-low/40 hover:bg-surface-container-low transition-colors">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-headline-sm text-headline-sm font-bold shrink-0">
+                    KR
+                  </div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Karoo Roadside Rescue</span>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-container text-tertiary-fixed font-label-sm text-label-sm uppercase">Pending</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant block mt-0.5">Beaufort West Depot • Karoo District, WC</span>
+<span class="font-label-sm text-label-sm text-outline mt-1 inline-block">CIPC: 2021/804322/07 • Reg Tyre-RSA-120</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="flex items-center gap-space-sm">
+<div class="px-space-sm py-1 rounded bg-surface-container font-headline-sm text-headline-sm font-bold text-on-surface">
+                    3
+                  </div>
+<div class="leading-tight">
+<span class="font-label-sm text-label-sm text-on-surface block font-semibold">Heavy Recovery Units</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Awaiting Platform Sign-off</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="inline-flex flex-col">
+<div class="flex items-center gap-1 font-label-md text-label-md font-semibold text-on-surface">
+<span class="material-symbols-outlined text-secondary text-[16px]">radar</span>
+<span>40km Hex Corridor</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline mt-0.5">Hex ID: WC-N1-HEX-44</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div>
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">--</span>
+<span class="font-label-sm text-label-sm text-outline">New Partner</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">0 Dispatches Logged</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="flex flex-wrap gap-1 max-w-[210px]">
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm flex items-center gap-1 font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> SABS Audit Req.
+                  </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> SARS VAT OK
+                  </span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="font-body-sm text-body-sm">
+<span class="font-label-md text-label-md font-bold text-on-surface block">Standard Bank SA</span>
+<span class="text-outline">Acc: •••• 5511</span>
+<span class="text-outline font-label-sm text-label-sm block mt-0.5">Pending Sign-off</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<span class="px-space-sm py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm uppercase font-bold inline-flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+                  Pending Review
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right align-middle">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary hover:bg-secondary transition-colors font-label-sm text-label-sm flex items-center gap-space-xs" onclick="document.getElementById('compliance-drawer').classList.remove('translate-x-full')" type="button">
+<span class="material-symbols-outlined text-[16px]">pageview</span>
+<span>Audit Docs</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-surface-container text-secondary hover:bg-secondary hover:text-on-secondary flex items-center justify-center transition-colors" title="Approve Application" type="button">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: QuickGrip Tyre Services (Active High Volume) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center font-headline-sm text-headline-sm font-bold text-secondary shrink-0">
+                    QG
+                  </div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">QuickGrip Tyre Services</span>
+<span class="material-symbols-outlined text-secondary text-[16px]">verified</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant block mt-0.5">Pinetown Logistics Park • Durban, KZN</span>
+<span class="font-label-sm text-label-sm text-outline mt-1 inline-block">CIPC: 2016/092144/07 • Reg Tyre-RSA-552</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="flex items-center gap-space-sm">
+<div class="px-space-sm py-1 rounded bg-surface-container font-headline-sm text-headline-sm font-bold text-on-surface">
+                    9
+                  </div>
+<div class="leading-tight">
+<span class="font-label-sm text-label-sm text-on-surface block font-semibold">24-Tonne Mobile Jacks</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">7 Active Along N3</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="inline-flex flex-col">
+<div class="flex items-center gap-1 font-label-md text-label-md font-semibold text-on-surface">
+<span class="material-symbols-outlined text-secondary text-[16px]">radar</span>
+<span>75km N3 Hillcrest-Harrismith</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline mt-0.5">Hex ID: KZN-N3-HILL-89</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div>
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">4.8</span>
+<div class="flex text-tertiary-fixed-dim">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">342 Heavy Rig Repairs</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="flex flex-wrap gap-1 max-w-[210px]">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> SABS Certified
+                  </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> SARS VAT
+                  </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Flare Squad
+                  </span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="font-body-sm text-body-sm">
+<span class="font-label-md text-label-md font-bold text-on-surface block">Nedbank Corporate</span>
+<span class="text-outline">Acc: •••• 4018</span>
+<span class="text-secondary font-label-sm text-label-sm block mt-0.5">Batch Automated</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<span class="px-space-sm py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm uppercase font-bold inline-flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+                  Active
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right align-middle">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="w-9 h-9 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-colors" title="View Compliance Documents" type="button">
+<span class="material-symbols-outlined text-[18px]">folder_shared</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-colors" title="Adjust Service Radius" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-surface-container text-error hover:bg-error-container flex items-center justify-center transition-colors" title="Suspend Account" type="button">
+<span class="material-symbols-outlined text-[18px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: ProFit Commercial (Suspended Safety Incident) -->
+<tr class="bg-error-container/20 hover:bg-error-container/30 transition-colors">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-error-container text-on-error-container flex items-center justify-center font-headline-sm text-headline-sm font-bold shrink-0">
+                    PF
+                  </div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">ProFit Commercial Mobile</span>
+<span class="px-2 py-0.5 rounded-full bg-error text-on-error font-label-sm text-label-sm uppercase">Sanctioned</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant block mt-0.5">Middelburg Rail Hub • Mpumalanga, MP</span>
+<span class="font-label-sm text-label-sm text-error mt-1 inline-block font-semibold">Incident: Uncertified Highway Rim Inflation</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="flex items-center gap-space-sm">
+<div class="px-space-sm py-1 rounded bg-surface-container font-headline-sm text-headline-sm font-bold text-on-surface">
+                    2
+                  </div>
+<div class="leading-tight">
+<span class="font-label-sm text-label-sm text-on-surface block font-semibold">Grounded Vans</span>
+<span class="font-body-sm text-body-sm text-error">Keys Revoked</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="inline-flex flex-col">
+<div class="flex items-center gap-1 font-label-md text-label-md font-semibold text-outline">
+<span class="material-symbols-outlined text-[16px]">location_off</span>
+<span>Disabled (N4 Corridor)</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline mt-0.5">Zero Dispatch Quota</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div>
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-headline-sm font-bold text-error">3.6</span>
+<div class="flex text-outline">
+<span class="material-symbols-outlined text-[16px] text-outline" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">51 Heavy Rig Repairs</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="flex flex-wrap gap-1 max-w-[210px]">
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> SABS Lapsed
+                  </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> SARS VAT OK
+                  </span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<div class="font-body-sm text-body-sm">
+<span class="font-label-md text-label-md font-bold text-outline block">Absa Bank Ltd</span>
+<span class="text-outline">Acc: •••• 8820</span>
+<span class="text-error font-label-sm text-label-sm block mt-0.5">Payouts Frozen</span>
+</div>
+</td>
+<td class="py-space-md px-space-md align-middle">
+<span class="px-space-sm py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm uppercase font-bold inline-flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+                  Suspended
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right align-middle">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="px-space-md py-1.5 rounded-lg bg-surface-container-high text-on-surface hover:bg-primary-container hover:text-on-primary transition-colors font-label-sm text-label-sm" type="button">
+                    Re-Audit Notice
+                  </button>
+<button class="w-9 h-9 rounded-lg bg-surface-container text-on-surface hover:bg-secondary hover:text-on-secondary flex items-center justify-center transition-colors" title="Restore Account" type="button">
+<span class="material-symbols-outlined text-[18px]">settings_backup_restore</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer Telemetry & Pagination -->
+<div class="px-space-lg py-space-md bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md text-on-surface-variant font-body-sm text-body-sm">
+<span>Showing <strong>4</strong> of <strong>98</strong> Mobile Repair Partners</span>
+<span>•</span>
+<span class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+            Real-time Telemetry Synced with Hex Grid
+          </span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-outline font-label-md text-label-md cursor-not-allowed" disabled="" type="button">Previous</button>
+<button class="px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md" type="button">1</button>
+<button class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-md text-label-md" type="button">2</button>
+<button class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-md text-label-md" type="button">3</button>
+<button class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-md text-label-md" type="button">Next</button>
+</div>
+</div>
+</div>
+<!-- Secondary Bento Overview: Fleet Moderation & Driver Health -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-lg">
+<!-- Fleet Governance Snapshot -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[24px]">directions_boat</span>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Commercial Fleets (46)</h2>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm">46 Approved</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Active corporate accounts with automated billing authority and credit limits.</p>
+<div class="mt-space-md space-y-space-sm">
+<div class="p-space-sm bg-surface-container-low rounded-lg flex items-center justify-between">
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface block">Trans-Cape Freight Logix</span>
+<span class="font-body-sm text-body-sm text-outline">140 Rigs • R250,000 Credit Facility</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm">In Good Standing</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex items-center justify-between">
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface block">Harrismith Bulk Carrier Co</span>
+<span class="font-body-sm text-body-sm text-outline">65 Rigs • Escrow Auto-Replenish</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm">In Good Standing</span>
+</div>
+</div>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-md text-label-md transition-colors flex items-center justify-center gap-space-xs" type="button">
+<span>Manage Fleet Company Contracts</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+<!-- Drivers Directory Registry -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[24px]">id_card</span>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Drivers Directory (312)</h2>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm">PrDP Validated</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Commercial truck drivers credentialed to trigger panic breakdowns and authorize fitments.</p>
+<div class="mt-space-md space-y-space-sm">
+<div class="p-space-sm bg-surface-container-low rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold text-label-md">
+                  JM
+                </div>
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface block">Jabulani Mthembu</span>
+<span class="font-body-sm text-body-sm text-outline">PrDP GP48910 • Trans-Cape Rig #12</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary text-[20px]">verified</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold text-label-md">
+                  DK
+                </div>
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface block">Dirk Kotze</span>
+<span class="font-body-sm text-body-sm text-outline">PrDP WC33012 • Karoo Logistics</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary text-[20px]">verified</span>
+</div>
+</div>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-md text-label-md transition-colors flex items-center justify-center gap-space-xs" type="button">
+<span>Audit 312 Fleet Driver Passes</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+<!-- Corridor Geo-Fencing Heatmap & Dispatch Safety -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[24px]">map</span>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Highway Coverage Health</h2>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm">Hex Grid OK</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Active mobile tyre vans mapped along key freight arteries to preserve sub-45min response.</p>
+<div class="mt-space-md space-y-space-sm">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="font-label-md text-label-md text-on-surface">N1 Gauteng - Cape Corridor</span>
+<span class="font-bold text-on-surface">94% Coverage (31 Vans)</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full bg-secondary-container" style="width: 94%"></div>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm pt-2">
+<span class="font-label-md text-label-md text-on-surface">N3 Durban Freight Port</span>
+<span class="font-bold text-on-surface">99% Coverage (48 Vans)</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full bg-secondary" style="width: 99%"></div>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm pt-2">
+<span class="font-label-md text-label-md text-on-surface">N4 Maputo Heavy Freight</span>
+<span class="font-bold text-on-surface text-error">72% (Needs Approval)</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim" style="width: 72%"></div>
+</div>
+</div>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-md text-label-md transition-colors flex items-center justify-center gap-space-xs" type="button">
+<span>Launch National Corridor Dispatch Map</span>
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</button>
+</div>
+</div>
+</div>
+<!-- SLIDE-OVER MODAL DRAWER: Karoo Roadside Rescue Verification Audit -->
+<div class="fixed inset-0 z-50 transform translate-x-full transition-transform duration-300 ease-in-out" id="compliance-drawer">
+<!-- Backdrop overlay -->
+<div class="absolute inset-0 bg-primary/60 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('compliance-drawer').classList.add('translate-x-full')"></div>
+<!-- Drawer panel content -->
+<div class="absolute right-0 top-0 bottom-0 w-full max-w-2xl bg-surface-container-lowest shadow-2xl flex flex-col z-10 overflow-hidden">
+<!-- Drawer Header -->
+<div class="px-space-lg py-space-md bg-surface-container-low border-b-0 flex items-center justify-between shrink-0">
+<div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest font-bold">Inspection Dossier</span>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">Pending Review</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg font-bold text-on-surface mt-1">Karoo Roadside Rescue</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Applied 14 Oct 2024 • Base: Beaufort West Depot, N1 Highway 460km Marker</p>
+</div>
+<button class="w-10 h-10 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-colors" onclick="document.getElementById('compliance-drawer').classList.add('translate-x-full')" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Drawer Body: Scrollable Dossier -->
+<div class="flex-1 overflow-y-auto p-space-lg space-y-space-lg">
+<!-- Business & CIPC Credentials Card -->
+<div class="bg-surface-container-low p-space-md rounded-xl space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">domain</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">1. CIPC &amp; SARS VAT Filing</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">Automated Match</span>
+</div>
+<div class="grid grid-cols-2 gap-space-md pt-2 text-body-sm font-body-sm">
+<div>
+<span class="text-outline block">Registered Legal Name:</span>
+<span class="font-bold text-on-surface">Karoo Heavy Breakdown Services (Pty) Ltd</span>
+</div>
+<div>
+<span class="text-outline block">CIPC Registration Number:</span>
+<span class="font-bold text-on-surface">2021/804322/07</span>
+</div>
+<div>
+<span class="text-outline block">SARS VAT Pin:</span>
+<span class="font-bold text-on-surface">4820199482 (Active Valid)</span>
+</div>
+<div>
+<span class="text-outline block">Directors Identified:</span>
+<span class="font-bold text-on-surface">M. Van Der Merwe, S. Dlamini</span>
+</div>
+</div>
+<div class="pt-2 flex items-center gap-space-sm">
+<a class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1 shadow-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px]">description</span>
+<span>View CIPC Certificate.pdf (1.4MB)</span>
+</a>
+<a class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1 shadow-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px]">receipt_long</span>
+<span>SARS Tax Clearance.pdf</span>
+</a>
+</div>
+</div>
+<!-- SABS Commercial Tyre Fitment Techs -->
+<div class="bg-surface-container-low p-space-md rounded-xl space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-error text-[20px]">engineering</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">2. SABS Technician Accreditations</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">1 Cert Awaiting Sign-off</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">SABS Standard 1550-2 requires all mobile tyre inflators on N-corridors to hold certified high-pressure training.</p>
+<div class="space-y-space-xs pt-1">
+<div class="p-space-sm bg-surface-container-lowest rounded-lg flex items-center justify-between">
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface block">Moseki Tau (Lead Fitter)</span>
+<span class="font-body-sm text-body-sm text-outline">SABS Heavy Commercial Reg #SABS-HC-89104</span>
+</div>
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+</div>
+<div class="p-space-sm bg-surface-container-lowest rounded-lg flex items-center justify-between">
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface block">Carel Strydom (Junior Tech)</span>
+<span class="font-body-sm text-body-sm text-error">Apprenticeship Logbook Expired 30 Sept</span>
+</div>
+<button class="px-space-sm py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high" type="button">
+                Request Waiver
+              </button>
+</div>
+</div>
+</div>
+<!-- Insurance Liability Coverage Card -->
+<div class="bg-surface-container-low p-space-md rounded-xl space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">shield</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">3. Commercial Liability &amp; Roadside Indemnity</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">Verified Santam</span>
+</div>
+<div class="grid grid-cols-2 gap-space-md pt-2 text-body-sm font-body-sm">
+<div>
+<span class="text-outline block">Underwriter:</span>
+<span class="font-bold text-on-surface">Santam Heavy Commercial Fleet</span>
+</div>
+<div>
+<span class="text-outline block">Public &amp; Roadside Liability:</span>
+<span class="font-bold text-on-surface">R10,000,000.00 Limit</span>
+</div>
+<div>
+<span class="text-outline block">Policy Number:</span>
+<span class="font-bold text-on-surface">SAN-HC-992014-ZA</span>
+</div>
+<div>
+<span class="text-outline block">Expiry Date:</span>
+<span class="font-bold text-on-surface">31 August 2025</span>
+</div>
+</div>
+</div>
+<!-- Tyre Casing Inventory Declaration -->
+<div class="bg-surface-container-low p-space-md rounded-xl space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">inventory_2</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">4. Mobile Casings Stock Declaration</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">38 Casings Stored</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Standard corridor sizes required to be stocked in Beaufort West base ready for instant dispatch:</p>
+<div class="grid grid-cols-3 gap-space-sm pt-1">
+<div class="p-space-sm bg-surface-container-lowest rounded-lg text-center">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface block">315/80 R22.5</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">18 In Stock</span>
+<span class="font-body-sm text-body-sm text-outline block mt-0.5">Steer &amp; Drive</span>
+</div>
+<div class="p-space-sm bg-surface-container-lowest rounded-lg text-center">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface block">385/65 R22.5</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">12 In Stock</span>
+<span class="font-body-sm text-body-sm text-outline block mt-0.5">Super Single Trailer</span>
+</div>
+<div class="p-space-sm bg-surface-container-lowest rounded-lg text-center">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface block">12R22.5</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">8 In Stock</span>
+<span class="font-body-sm text-body-sm text-outline block mt-0.5">Commercial Steer</span>
+</div>
+</div>
+</div>
+<!-- Geo-Radius Configuration -->
+<div class="bg-surface-container-low p-space-md rounded-xl space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">radar</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">5. Proposed Service Radius Slider</span>
+</div>
+<span class="font-headline-sm text-headline-sm font-bold text-secondary">40 km Corridor</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Restricted to Hex Zone WC-N1-HEX-44 to ensure sub-50 minute arrival times between Beaufort West and Leeu Gamka.</p>
+<div class="pt-2">
+<input class="w-full accent-secondary cursor-pointer" max="100" min="20" type="range" value="40"/>
+<div class="flex justify-between text-body-sm font-body-sm text-outline mt-1">
+<span>20km Local Depot</span>
+<span>40km Approved Default</span>
+<span>100km Maximum Extended</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Drawer Actions Footer -->
+<div class="p-space-lg bg-surface-container-lowest border-t-0 flex flex-col sm:flex-row items-center justify-between gap-space-md shrink-0 shadow-lg">
+<button class="w-full sm:w-auto px-space-lg py-3 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-lg text-label-lg transition-colors" onclick="document.getElementById('compliance-drawer').classList.add('translate-x-full')" type="button">
+          Reject with Notice
+        </button>
+<div class="flex items-center gap-space-sm w-full sm:w-auto">
+<button class="flex-1 sm:flex-none px-space-md py-3 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-lg text-label-lg transition-colors" onclick="document.getElementById('compliance-drawer').classList.add('translate-x-full')" type="button">
+            Request Addl Docs
+          </button>
+<button class="flex-1 sm:flex-none px-space-xl py-3 rounded-lg bg-secondary text-on-secondary hover:bg-secondary-container font-label-lg text-label-lg shadow-sm transition-colors flex items-center justify-center gap-space-xs" onclick="alert('Partner Karoo Roadside Rescue has been approved and issued an active Corridor dispatch licence.'); document.getElementById('compliance-drawer').classList.add('translate-x-full')" type="button">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span>Approve Application</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+    // Tab switching interactions
+    const tabs = document.querySelectorAll('#segmentTabs .tab-btn');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.classList.remove('bg-primary-container', 'text-on-primary', 'active');
+          t.classList.add('text-on-surface-variant');
+        });
+        tab.classList.add('bg-primary-container', 'text-on-primary', 'active');
+        tab.classList.remove('text-on-surface-variant');
+      });
+    });
+  </script>
+</div></main></div></body></html>

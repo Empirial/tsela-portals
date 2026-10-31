@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.expo/
+web-build/
+.env
+.env.*
+*.log
+.DS_Store
+
+# app/ is its own git repo (Expo project)
+/app/
+
+# large media, keep out of GitHub
+/shared/videos/
+/shared/*.pdf

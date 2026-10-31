@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-error-container": "#93000a", "on-secondary-fixed-variant": "#003fa4", "primary-fixed": "#d6e3fd", "on-primary": "#ffffff", "inverse-primary": "#bac7e1", "outline-variant": "#c5c6cd", "surface-dim": "#d0dbed", "on-tertiary-fixed": "#2a1700", "secondary-container": "#0266ff", "inverse-on-surface": "#eaf1ff", "secondary-fixed": "#dae1ff", "on-tertiary": "#ffffff", "outline": "#75777d", "tertiary-fixed": "#ffddb8", "primary": "#000000", "primary-fixed-dim": "#bac7e1", "secondary-fixed-dim": "#b3c5ff", "on-background": "#121c2a", "on-tertiary-fixed-variant": "#653e00", "on-secondary-fixed": "#001849", "on-primary-fixed": "#0f1c2f", "secondary": "#0050cc", "on-secondary": "#ffffff", "surface-container-highest": "#d9e3f6", "surface": "#f8f9ff", "on-primary-container": "#78849c", "primary-container": "#0f1c2f", "tertiary-container": "#2a1700", "surface-container-high": "#dee9fc", "on-surface-variant": "#44474c", "on-error": "#ffffff", "error-container": "#ffdad6", "surface-container": "#e6eeff", "on-secondary-container": "#f9f7ff", "tertiary": "#000000", "on-surface": "#121c2a", "background": "#f8f9ff", "tertiary-fixed-dim": "#ffb95f", "surface-container-low": "#eff4ff", "on-primary-fixed-variant": "#3b475c", "error": "#ba1a1a", "inverse-surface": "#27313f", "on-tertiary-container": "#b87500", "surface-bright": "#f8f9ff", "surface-tint": "#525f75", "surface-container-lowest": "#ffffff", "surface-variant": "#d9e3f6" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-xl": "2rem", "gutter": "1rem", "space-md": "1rem", "space-sm": "0.5rem", "margin-mobile": "0.75rem", "margin": "1rem", "space-lg": "1.5rem", "gutter-mobile": "0.75rem", "space-xs": "0.25rem" }, fontFamily: { "headline-md": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "label-lg": ["Inter"], "headline-sm": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "body-lg": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "headline-lg": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "body-md": ["Inter"], "body-sm": ["Inter"] }, fontSize: { "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-lg": ["15px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "headline-lg-mobile": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin-mobile flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center"><span class="material-symbols-outlined text-secondary-container text-[22px]">shield_with_heart</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface leading-tight">Tsela</span><div class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-secondary-container animate-pulse"></span><span class="font-label-sm text-label-sm text-on-surface-variant truncate max-w-[120px]">TransLogix Ops</span></div></div></div><div class="flex items-center gap-space-sm"><button class="w-11 h-11 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-container transition-colors relative"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error ring-2 ring-surface"></span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 bg-surface pb-28"><div class="flex flex-col w-full">
+<!-- Status & Quick Pulse Header Area -->
+<div class="px-margin-mobile pt-space-md pb-space-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Live Fleet Telemetry</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight">Operations Deck</h1>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface shadow-sm">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-ping"></span>
+<span class="font-label-sm text-label-sm text-secondary-container font-bold">24/7 LIVE</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Western Cape Corridor • All breakdown dispatches active</p>
+</div>
+<!-- Fleet Metrics Bento Strip -->
+<div class="px-margin-mobile py-space-xs">
+<div class="grid grid-cols-2 gap-2">
+<!-- Active Rig Stat -->
+<div class="bg-surface-container-lowest p-3.5 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Active Trucks</span>
+<div class="w-7 h-7 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[18px]">local_shipping</span>
+</div>
+</div>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-extrabold">24</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">rigs monitored</span>
+</div>
+<div class="mt-1 flex items-center gap-1 text-[11px] font-semibold text-secondary-container">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+<span>18 Normal</span>
+<span class="text-outline-variant">•</span>
+<span class="text-error font-bold">3 Breakdown</span>
+</div>
+</div>
+<!-- Tyre Uptime Stat -->
+<div class="bg-surface-container-lowest p-3.5 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Tyre Uptime</span>
+<div class="w-7 h-7 rounded-lg bg-surface-container flex items-center justify-center text-secondary-container">
+<span class="material-symbols-outlined text-[18px]">tire_repair</span>
+</div>
+</div>
+<div class="mt-2 flex items-baseline gap-1.5">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-extrabold">98.2%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">fleet SLA</span>
+</div>
+<div class="mt-1 flex items-center gap-1">
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary-container h-full rounded-full" style="width: 98%;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Primary Emergency / Dispatch Logging Action Banner -->
+<div class="px-margin-mobile py-space-sm">
+<div class="relative bg-primary-container rounded-xl p-4 text-on-primary shadow-md overflow-hidden">
+<!-- Decorative ambient gradient -->
+<div class="absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-secondary-container/20 blur-2xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col gap-3">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-on-secondary text-[24px]">add_alert</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-primary leading-tight">Log Tyre Breakdown</h2>
+<span class="font-label-sm text-label-sm text-on-primary-container">Fast mobile dispatch under 3 taps</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm uppercase font-bold">Priority</span>
+</div>
+<p class="font-body-sm text-body-sm text-primary-fixed-dim">
+          Report sudden roadside blowouts, slow rim leaks, or call mobile fitters with onboard torque guns.
+        </p>
+<button class="w-full h-[52px] bg-secondary-container hover:bg-secondary active:scale-[0.99] transition-all rounded-lg flex items-center justify-center gap-2 text-on-secondary shadow-lg" id="btn-log-breakdown">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span class="font-label-lg text-label-lg">Log New Breakdown Rig</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Incident Section: Live Breakdown Jobs -->
+<div class="px-margin-mobile pt-space-sm pb-space-xs flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-error animate-pulse"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Urgent Breakdown Queue</h2>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">3 ACTIVE</span>
+</div>
+<div class="px-margin-mobile flex flex-col gap-3 py-space-xs">
+<!-- Incident 1: Urgent en-route tracking -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col gap-3.5">
+<div class="flex items-start justify-between gap-2">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">INC #TS-8402</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label-sm text-label-sm font-bold text-error">CRITICAL BLOWOUT</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface mt-0.5">Volvo FH16 • CA 892-411</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm font-bold tracking-tight text-right">
+          ETA 22m
+        </span>
+</div>
+<!-- Route & Driver Context -->
+<div class="grid grid-cols-2 gap-2 bg-surface-container-low p-2.5 rounded-lg text-on-surface">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">person</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Driver</span>
+<span class="font-body-sm text-body-sm font-semibold truncate">Sipho Ndlovu</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">pin_drop</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Location</span>
+<span class="font-body-sm text-body-sm font-semibold truncate">N1 Paarl KM 42.8</span>
+</div>
+</div>
+</div>
+<!-- Axle Issue & Assigned Tech -->
+<div class="flex items-center justify-between text-on-surface-variant pt-0.5">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-error">warning</span>
+<span class="font-body-sm text-body-sm font-medium">Position: L2-Outer (315/80 R22.5)</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">build_circle</span>
+<span class="font-label-sm text-label-sm">Apex 24/7 Mobile</span>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 h-11 bg-secondary-container hover:bg-secondary text-on-secondary rounded-lg font-label-lg text-label-lg flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined text-[18px]">location_searching</span>
+<span>Track Live Fitter</span>
+</button>
+<button aria-label="Call Driver" class="w-11 h-11 bg-surface-container hover:bg-surface-container-high text-on-surface rounded-lg flex items-center justify-center active:scale-[0.95] transition-transform">
+<span class="material-symbols-outlined text-[20px]">call</span>
+</button>
+</div>
+</div>
+<!-- Incident 2: Awaiting Fitter Match -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col gap-3.5">
+<div class="flex items-start justify-between gap-2">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">INC #TS-8405</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label-sm text-label-sm text-tertiary-container font-semibold">SLOW PUNCTURE</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface mt-0.5">Scania R500 • CA 612-990</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold text-right animate-pulse">
+          MATCHING
+        </span>
+</div>
+<div class="grid grid-cols-2 gap-2 bg-surface-container-low p-2.5 rounded-lg text-on-surface">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">person</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Driver</span>
+<span class="font-body-sm text-body-sm font-semibold truncate">Pieter V.</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">navigation</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Location</span>
+<span class="font-body-sm text-body-sm font-semibold truncate">N7 Moorreesburg</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-tertiary-container">tire_repair</span>
+<span class="font-body-sm text-body-sm">Drive Axle R1 (Pressure drop: 4.8 Bar)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-tertiary-fixed-variant">3 fitters nearby</span>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="w-full h-11 bg-primary text-on-primary hover:bg-on-surface-variant rounded-lg font-label-lg text-label-lg flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined text-[18px]">handshake</span>
+<span>Select &amp; Dispatch Repairer</span>
+</button>
+</div>
+</div>
+<!-- Incident 3: Awaiting Manager Sign-off -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col gap-3">
+<div class="flex items-start justify-between gap-2">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">INC #TS-8399</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">TYRE REPLACED</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface mt-0.5">Mercedes Actros • CA 418-202</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold">
+          COMPLETED
+        </span>
+</div>
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-surface-container-low text-on-surface">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container text-[20px]">verified</span>
+<span class="font-body-sm text-body-sm font-medium">Torque Checked: 650Nm</span>
+</div>
+<span class="font-label-md text-label-md font-bold text-on-surface">ZAR 6,420.00</span>
+</div>
+<button class="w-full h-11 bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-lg font-label-lg text-label-lg flex items-center justify-center gap-1.5 active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined text-[18px]">draw</span>
+<span>Review &amp; Sign VAT Invoice</span>
+</button>
+</div>
+</div>
+<!-- Interactive Truck Fleet Roster -->
+<div class="px-margin-mobile pt-space-md pb-space-xs flex items-center justify-between">
+<div class="flex flex-col">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Fleet Roster &amp; Telemetry</h2>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Live tyre pressure sensor stream</span>
+</div>
+<button class="text-secondary-container font-label-sm text-label-sm font-bold flex items-center gap-0.5">
+<span>View 24</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<!-- Search & Segment Filters -->
+<div class="px-margin-mobile py-space-xs flex flex-col gap-2.5">
+<div class="relative w-full">
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant absolute left-3 top-3.5">search</span>
+<input class="w-full h-12 bg-surface-container-lowest rounded-lg pl-10 pr-4 text-on-surface font-body-sm text-body-sm shadow-sm placeholder:text-outline focus:outline-none focus:bg-surface-container" placeholder="Search truck reg, driver, or tyre size..." type="text"/>
+</div>
+<!-- Filter Pills -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1" id="filter-pills">
+<button class="filter-chip px-3.5 py-1.5 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm font-semibold shrink-0">
+        All Rigs (24)
+      </button>
+<button class="filter-chip px-3.5 py-1.5 rounded-full bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shrink-0 shadow-sm">
+        In Transit (16)
+      </button>
+<button class="filter-chip px-3.5 py-1.5 rounded-full bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shrink-0 shadow-sm">
+        Depots (5)
+      </button>
+<button class="filter-chip px-3.5 py-1.5 rounded-full bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shrink-0 shadow-sm">
+        Needs Service (3)
+      </button>
+</div>
+</div>
+<!-- Truck Mini Cards Grid -->
+<div class="px-margin-mobile flex flex-col gap-2.5 pt-space-xs pb-space-lg">
+<!-- Truck Item 1 -->
+<div class="truck-card bg-surface-container-lowest rounded-xl p-3.5 shadow-sm flex flex-col gap-2.5 active:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[22px]">rv_hookup</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">CA 331-509</span>
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Driver: Jabu Khumalo • Interlink Tri-Axle</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">En Route</span>
+</div>
+<!-- Telemetry Tyre Health Matrix -->
+<div class="flex items-center justify-between bg-surface-container-low p-2 rounded-lg">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-secondary-container">done_all</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">22 Tyres Normal (8.5 - 9.1 Bar)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">315/80 R22.5</span>
+</div>
+</div>
+<!-- Truck Item 2 (Warning) -->
+<div class="truck-card bg-surface-container-lowest rounded-xl p-3.5 shadow-sm flex flex-col gap-2.5 active:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+<span class="material-symbols-outlined text-[22px]">warning</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">CA 774-210</span>
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Driver: David Mare • 18-Wheeler Refrigerated</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">Low PSI</span>
+</div>
+<!-- Telemetry Tyre Health Matrix -->
+<div class="flex items-center justify-between bg-surface-container-low p-2 rounded-lg">
+<div class="flex items-center gap-1.5 text-on-tertiary-container">
+<span class="material-symbols-outlined text-[18px] text-error">priority_high</span>
+<span class="font-label-sm text-label-sm font-semibold">Axle 3 Left-Inner: 6.2 Bar (Slow Drop)</span>
+</div>
+<button class="font-label-sm text-label-sm text-secondary-container font-bold underline">Inspect</button>
+</div>
+</div>
+<!-- Truck Item 3 -->
+<div class="truck-card bg-surface-container-lowest rounded-xl p-3.5 shadow-sm flex flex-col gap-2.5 active:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[22px]">local_shipping</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">CA 911-304</span>
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Driver: Moses Sibande • Superlink Tanker</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">In Transit</span>
+</div>
+<!-- Telemetry Tyre Health Matrix -->
+<div class="flex items-center justify-between bg-surface-container-low p-2 rounded-lg">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-secondary-container">verified</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">All 18 Tyres Balanced &amp; Calibrated</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">385/65 R22.5</span>
+</div>
+</div>
+</div>
+<!-- Interactive Modal Drawer for Breakdown Quick Dispatch -->
+<div class="hidden fixed inset-0 z-50 flex items-end justify-center bg-primary-container/70 backdrop-blur-sm p-0 transition-opacity" id="breakdown-modal">
+<div class="w-full max-w-lg bg-surface-container-lowest rounded-t-2xl p-5 shadow-2xl flex flex-col gap-4 animate-in slide-in-from-bottom duration-200">
+<div class="flex items-center justify-between pb-1">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-lg bg-secondary-container text-on-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">fmd_bad</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Rapid Breakdown Dispatch</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Step 1 of 2: Select rig &amp; position</p>
+</div>
+</div>
+<button class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant" id="btn-close-modal">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Rig Quick Select -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-on-surface font-bold uppercase tracking-wider">Select Affected Rig</label>
+<div class="relative">
+<select class="w-full h-12 bg-surface-container-low rounded-lg px-3.5 text-on-surface font-body-sm text-body-sm appearance-none focus:outline-none">
+<option>CA 892-411 • Volvo FH16 (Sipho Ndlovu)</option>
+<option>CA 612-990 • Scania R500 (Pieter V.)</option>
+<option>CA 774-210 • Mercedes Actros (David Mare)</option>
+<option>CA 331-509 • MAN TGX (Jabu Khumalo)</option>
+</select>
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant absolute right-3 top-3.5 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Quick Axle Visual Picker Selector (Tactile Utilitarian) -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-on-surface font-bold uppercase tracking-wider">Tap Damaged Tyre Axle</label>
+<div class="grid grid-cols-4 gap-2 bg-surface-container-low p-3 rounded-lg">
+<button class="h-10 rounded bg-secondary-container text-on-secondary font-label-sm text-label-sm font-bold flex flex-col items-center justify-center shadow-sm">
+<span>Steer L1</span>
+<span class="text-[9px] opacity-80">SELECTED</span>
+</button>
+<button class="h-10 rounded bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold flex flex-col items-center justify-center shadow-sm">
+<span>Steer R1</span>
+<span class="text-[9px] text-on-surface-variant">OK</span>
+</button>
+<button class="h-10 rounded bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold flex flex-col items-center justify-center shadow-sm">
+<span>Drive L2</span>
+<span class="text-[9px] text-on-surface-variant">OK</span>
+</button>
+<button class="h-10 rounded bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-bold flex flex-col items-center justify-center shadow-sm">
+<span>Drive R2</span>
+<span class="text-[9px] text-on-surface-variant">OK</span>
+</button>
+</div>
+</div>
+<!-- Immediate Roadside Pin -->
+<div class="flex items-center gap-2 p-3 bg-surface-container rounded-lg">
+<span class="material-symbols-outlined text-secondary-container text-[22px]">my_location</span>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-label-sm text-label-sm text-on-surface font-semibold truncate">Acquired GPS: N1 Highway KM 48.2</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-[11px]">Accuracy ± 4 meters • Roadside shoulder</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-secondary-container">check_circle</span>
+</div>
+<button class="w-full h-12 bg-secondary-container hover:bg-secondary text-on-secondary rounded-lg font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-lg" id="btn-confirm-dispatch">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+<span>Broadcast Incident to Nearest Mobile Fitters</span>
+</button>
+</div>
+</div>
+<script>
+    // Micro-interaction behaviors for fleet manager dashboard
+    const logBreakdownBtn = document.getElementById('btn-log-breakdown');
+    const breakdownModal = document.getElementById('breakdown-modal');
+    const closeModalBtn = document.getElementById('btn-close-modal');
+    const confirmDispatchBtn = document.getElementById('btn-confirm-dispatch');
+    const filterPills = document.querySelectorAll('.filter-chip');
+
+    if (logBreakdownBtn && breakdownModal) {
+      logBreakdownBtn.addEventListener('click', () => {
+        breakdownModal.classList.remove('hidden');
+      });
+    }
+
+    if (closeModalBtn && breakdownModal) {
+      closeModalBtn.addEventListener('click', () => {
+        breakdownModal.classList.add('hidden');
+      });
+    }
+
+    if (confirmDispatchBtn && breakdownModal) {
+      confirmDispatchBtn.addEventListener('click', () => {
+        confirmDispatchBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span><span>Dispatching Fitters...</span>';
+        setTimeout(() => {
+          breakdownModal.classList.add('hidden');
+          confirmDispatchBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">bolt</span><span>Broadcast Incident to Nearest Mobile Fitters</span>';
+        }, 1000);
+      });
+    }
+
+    filterPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        filterPills.forEach(p => {
+          p.classList.remove('bg-primary-container', 'text-on-primary');
+          p.classList.add('bg-surface-container-lowest', 'text-on-surface');
+        });
+        pill.classList.remove('bg-surface-container-lowest', 'text-on-surface');
+        pill.classList.add('bg-primary-container', 'text-on-primary');
+      });
+    });
+  </script>
+</div></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(15,28,47,0.06)]" data-active-classes="text-secondary-container font-semibold"><div class="flex justify-around items-center h-16 px-space-xs"><a aria-current="page" class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[48px] px-2 transition-colors text-secondary-container font-semibold" data-path="fleet-dashboard" href="#"><span class="material-symbols-outlined text-[22px]">local_shipping</span><span class="font-label-sm text-label-sm">Fleet</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[48px] px-2 text-on-surface-variant transition-colors" data-path="log-dispatch" href="#"><span class="material-symbols-outlined text-[22px]">fmd_bad</span><span class="font-label-sm text-label-sm">Dispatch</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[48px] px-2 text-on-surface-variant transition-colors" data-path="repairers-map" href="#"><span class="material-symbols-outlined text-[22px]">near_me</span><span class="font-label-sm text-label-sm">Repairers</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[48px] px-2 text-on-surface-variant transition-colors" data-path="history-invoices" href="#"><span class="material-symbols-outlined text-[22px]">receipt_long</span><span class="font-label-sm text-label-sm">Billing</span></a></div></nav></body></html>

@@ -1,0 +1,194 @@
+@import 'tailwindcss';
+
+/* Tokens from DESIGN.md (Fleet Dispatch Logistics), recoloured to the Tsela logo */
+@theme {
+  --color-deep: #050f33;
+  --color-navy: #0a1f5c;
+  --color-brand: #1150ab;
+  --color-brand-dark: #0b3a80;
+  --color-lime: #8cc63f;
+  --color-leaf: #6aa318;
+  --color-amber: #f59e0b;
+  --color-danger: #ef4444;
+  --color-ok: #10b981;
+  --color-canvas: #f3f5f9;
+  --color-line: #e2e8f0;
+  --color-ink: #1f2937;
+  --color-muted: #64748b;
+  --color-tint: #eef3fb;
+
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tabular figures for money, plates and ETAs (DESIGN.md typography rule) */
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Landing page: feature cards fade up when the rotating portal changes */
+@keyframes portal-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.portal-in {
+  animation: portal-in 600ms ease-out both;
+}
+
+/* Landing page opening screen: logo pop and wireframe skeleton shimmer */
+@keyframes logo-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.logo-pop {
+  animation: logo-pop 700ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton {
+  border: 1px solid #5b6577;
+  background: linear-gradient(100deg, #3a4254 30%, #5f6a7e 50%, #3a4254 70%) 0 0 / 200% 100%;
+  animation: skeleton-shimmer 1.6s linear infinite;
+}
+
+/* Landing page: the photo is an organic blob, not a perfect circle */
+.blob-photo {
+  border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+  animation: blob-shape 14s ease-in-out infinite;
+}
+
+@keyframes blob-shape {
+  0%,
+  100% {
+    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+  }
+  33% {
+    border-radius: 46% 54% 42% 58% / 55% 44% 56% 45%;
+  }
+  66% {
+    border-radius: 52% 48% 60% 40% / 43% 58% 42% 57%;
+  }
+}
+
+/* Landing page: liquid blobs behind the photo */
+.liquid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+  filter: blur(3px);
+  border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+  animation:
+    liquid-morph 9s ease-in-out infinite,
+    liquid-spin 24s linear infinite;
+}
+
+.liquid-a {
+  background: linear-gradient(135deg, #1150ab, #0a1f5c);
+}
+
+.liquid-b {
+  inset: 6%;
+  opacity: 0.5;
+  background: linear-gradient(200deg, #8cc63f, #1150ab);
+  animation-duration: 11s, 30s;
+  animation-direction: reverse, reverse;
+}
+
+.liquid-c {
+  inset: 14%;
+  opacity: 0.45;
+  background: linear-gradient(45deg, #60a5fa, #1150ab);
+  animation-duration: 13s, 18s;
+}
+
+@keyframes liquid-morph {
+  0%,
+  100% {
+    border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+  }
+  25% {
+    border-radius: 40% 60% 38% 62% / 60% 40% 62% 38%;
+  }
+  50% {
+    border-radius: 55% 45% 66% 34% / 40% 62% 38% 60%;
+  }
+  75% {
+    border-radius: 36% 64% 47% 53% / 52% 44% 56% 48%;
+  }
+}
+
+@keyframes liquid-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Landing page: hero logo bounces */
+@keyframes logo-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.7, 1);
+  }
+  50% {
+    transform: translateY(-18px);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.7, 1);
+  }
+}
+
+.logo-bounce {
+  animation: logo-bounce 1.6s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .portal-in,
+  .logo-bounce,
+  .logo-pop,
+  .skeleton,
+  .blob-photo,
+  .liquid {
+    animation: none;
+  }
+}
