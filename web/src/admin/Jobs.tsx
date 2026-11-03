@@ -11,7 +11,7 @@ export default function Jobs() {
   const { settings } = useSettings()
   const [q, setQ] = useState('')
   const [hw, setHw] = useState<(typeof filters)[number]>('All highways')
-  const [selected, setSelected] = useState(jobs[0].id)
+  const [selected, setSelected] = useState(jobs[0]?.id ?? '')
   const [settled, setSettled] = useState<string[]>([])
   const [frozen, setFrozen] = useState<string[]>([])
 
@@ -25,9 +25,14 @@ export default function Jobs() {
   }, [q, hw])
 
   const job = jobs.find((j) => j.id === selected) ?? jobs[0]
-  const net = job.gross / (1 + settings.vatPct / 100) // ex-VAT subtotal
-  const vat = job.gross - net
-  const fee = (job.gross * settings.feePct) / 100
+  const net = job ? job.gross / (1 + settings.vatPct / 100) : 0 // ex-VAT subtotal
+  const vat = job ? job.gross - net : 0
+  const fee = job ? (job.gross * settings.feePct) / 100 : 0
+  const live = jobs.filter((j) => ['En route', 'On site', 'Fitting'].includes(j.status)).length
+  const signoff = jobs.filter((j) => j.status === 'Fitting').length
+  const disputed = jobs.filter((j) => j.status === 'Escrow on hold').length
+  const paid = jobs.filter((j) => j.status === 'Bank cleared').length
+  const total = jobs.reduce((a, j) => a + j.gross, 0)
 
   return (
     <>
@@ -46,11 +51,11 @@ export default function Jobs() {
       />
 
       <section aria-label="Job totals" className="grid grid-cols-2 gap-4 lg:grid-cols-5">
-        <Stat label="All jobs" value="284" sub="This month (ZAR 1.42M)" />
-        <Stat label="In progress / live" value="18" sub="11 on N3 • 7 on N1" />
-        <Stat label="Fleet sign-off" value="7" sub="Torque verification pending" />
-        <Stat label="Disputed / escrow" value="2" sub="Casing liability audit" />
-        <Stat label="Settled & paid" value="257" sub="Instant EFT cleared" />
+        <Stat label="All jobs" value={String(jobs.length)} sub={`This month (${zar(total)})`} />
+        <Stat label="In progress / live" value={String(live)} sub="Dispatched and on the road" />
+        <Stat label="Fleet sign-off" value={String(signoff)} sub="Torque verification pending" />
+        <Stat label="Disputed / escrow" value={String(disputed)} sub="Casing liability audit" />
+        <Stat label="Settled & paid" value={String(paid)} sub="Instant EFT cleared" />
       </section>
 
       <div className="flex flex-wrap items-center gap-3">
@@ -134,12 +139,17 @@ export default function Jobs() {
               )
             })}
           </Table>
-          {list.length === 0 ? <p className="p-6 text-center text-sm text-muted">No jobs match your filters.</p> : null}
+          {list.length === 0 ? (
+            <p className="p-6 text-center text-sm text-muted">
+              {jobs.length === 0 ? 'No jobs yet. They appear here as soon as a driver reports a problem.' : 'No jobs match your filters.'}
+            </p>
+          ) : null}
           <p className="border-t border-line px-4 py-3 text-xs text-muted">
-            Showing {list.length} of 284 records • Real-time socket active
+            Showing {list.length} of {jobs.length} records
           </p>
         </Card>
 
+        {job ? (
         <Card className="flex h-fit flex-col gap-4">
           <div className="flex items-start justify-between">
             <div>
@@ -197,6 +207,9 @@ export default function Jobs() {
             {settled.includes(job.id) ? 'Settled via EFT' : 'Force fleet sign-off & settle EFT'}
           </Button>
         </Card>
+        ) : (
+          <Card className="h-fit text-sm text-muted">Select a job to inspect it. Nothing has been reported yet.</Card>
+        )}
       </div>
     </>
   )

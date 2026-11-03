@@ -4,16 +4,16 @@ import { Link } from 'react-router-dom'
 import { Badge, Button, Card, PageHeader, Stat, Tabs } from '../components/ui'
 import { zar } from '../lib/format'
 import { useSettings } from '../lib/settings'
-import { GMV_MONTH, jobs } from './data'
+import { fleets, GMV_MONTH, jobs, mechanics } from './data'
 
-const corridors = [
-  { id: 'n1', label: 'N1 Western', jobs: 16, sla: '94% within 60m SLA', status: 'Optimal (42m SLA)', tone: 'text-brand' },
-  { id: 'n3', label: 'N3 Natal', jobs: 24, sla: '91% within 60m SLA', status: 'Van Reenen Fog (54m SLA)', tone: 'text-amber' },
-  { id: 'n4', label: 'N4 Maputo', jobs: 8, sla: '99% within 60m SLA', status: 'Clear (38m SLA)', tone: 'text-brand' },
+const corridorList = [
+  { id: 'n1', label: 'N1 Western', prefix: 'N1' },
+  { id: 'n3', label: 'N3 Natal', prefix: 'N3' },
+  { id: 'n4', label: 'N4 Maputo', prefix: 'N4' },
 ] as const
 
 const days = ['Mon 18', 'Tue 19', 'Wed 20', 'Thu 21', 'Fri 22', 'Sat 23', 'Sun 24']
-const gmvSeries = [190, 215, 205, 240, 262, 285, 320] // R'000 / day, mock
+const gmvSeries = [0, 0, 0, 0, 0, 0, 0] // R'000 / day: fills in from real jobs once the API exists
 
 export default function Overview() {
   const { settings } = useSettings()
@@ -22,6 +22,22 @@ export default function Overview() {
 
   const take = (GMV_MONTH * settings.feePct) / 100
   const pool = GMV_MONTH - take
+
+  const corridors = corridorList.map((c) => {
+    const n = jobs.filter((j) => j.highway.startsWith(c.prefix)).length
+    return {
+      ...c,
+      jobs: n,
+      sla: n ? `${n} on this corridor` : 'No jobs yet',
+      status: n ? `${n} active` : 'No active jobs',
+      tone: 'text-brand',
+    }
+  })
+  const active = jobs.filter((j) => j.status !== 'Bank cleared').length
+  const cleared = jobs.length - active
+  const pendingMechanics = mechanics.filter((m) => m.state === 'Pending').length
+  const onScene = jobs.filter((j) => j.status === 'On site' || j.status === 'Fitting').length
+  const disputed = jobs.filter((j) => j.status === 'Escrow on hold').length
 
   const shown = corridors.filter((c) => corridor === 'all' || c.id === corridor)
 
@@ -46,16 +62,16 @@ export default function Overview() {
       </Card>
 
       <section aria-label="Key figures" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        <Stat label="Gross job volume (GMV)" value={zar(GMV_MONTH)} sub="▲ +14.2% vs last month" icon={Banknote} />
+        <Stat label="Gross job volume (GMV)" value={zar(GMV_MONTH)} sub="No jobs paid yet" icon={Banknote} />
         <Stat
           label={`Platform take (${settings.feePct}% avg)`}
           value={zar(take)}
-          sub="▲ +18.5% take-run-rate"
+          sub="Earned on completed jobs"
           icon={Landmark}
         />
-        <Stat label="Dispatches today" value="48 Active" sub="114 jobs cleared & invoiced" icon={Radar} />
-        <Stat label="Fleet transporters" value="42" sub="6 pending KYC" icon={Truck} />
-        <Stat label="Mobile tyre vans" value="86" sub="12 currently on-scene" icon={Wrench} />
+        <Stat label="Dispatches today" value={`${active} Active`} sub={`${cleared} jobs cleared & invoiced`} icon={Radar} />
+        <Stat label="Fleet transporters" value={String(fleets.length)} sub={`${fleets.filter((f) => f.state === 'Pending KYC').length} pending KYC`} icon={Truck} />
+        <Stat label="Mobile tyre vans" value={String(mechanics.reduce((a, m) => a + m.vans, 0))} sub={`${onScene} currently on-scene`} icon={Wrench} />
       </section>
 
       <div className="grid gap-6 xl:grid-cols-3">
@@ -84,24 +100,11 @@ export default function Overview() {
           >
             <div className="absolute top-20 -right-8 -left-8 h-4 -rotate-6 bg-white" />
             <div className="absolute top-40 -right-8 -left-8 h-4 rotate-6 bg-white" />
-            {[
-              ['18%', '30%', '4'],
-              ['52%', '45%', '3'],
-              ['70%', '70%', '2'],
-            ].map(([l, t, n]) => (
-              <span
-                key={l}
-                style={{ left: l, top: t }}
-                className="absolute flex h-8 w-8 items-center justify-center rounded-full bg-brand text-sm font-bold text-white ring-2 ring-white"
-              >
-                {n}
-              </span>
-            ))}
-            <div className="absolute bottom-3 left-3 rounded-lg bg-white px-3 py-2 text-sm shadow">
-              <p className="text-[11px] font-bold text-brand">N3 HEAVY FREIGHT</p>
-              <p className="font-bold">Van Reenen's Pass Sector</p>
-              <p className="text-xs text-muted">8 mobile units staged • Avg response 22 min</p>
-            </div>
+            {jobs.length === 0 ? (
+              <p className="absolute bottom-3 left-3 rounded-lg bg-white px-3 py-2 text-sm text-muted shadow">
+                No incidents on the road right now.
+              </p>
+            ) : null}
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             {shown.map((c) => (
@@ -118,9 +121,10 @@ export default function Overview() {
           <div className="flex items-center justify-between">
             <h2 className="font-display text-xl font-extrabold">Active Job Dispatches</h2>
             <Link to="/admin/jobs" className="text-sm font-semibold text-brand hover:underline">
-              View all (48) →
+              View all ({jobs.length}) →
             </Link>
           </div>
+          {jobs.length === 0 ? <p className="mt-4 text-sm text-muted">No dispatches yet.</p> : null}
           <ul className="mt-4 flex flex-col gap-3">
             {jobs.slice(0, 3).map((j) => (
               <li key={j.id} className="rounded-xl bg-tint p-3">
@@ -137,7 +141,7 @@ export default function Overview() {
           </ul>
           <div className="mt-auto flex items-end justify-between pt-6">
             <span className="text-sm text-muted">Roadside dispatch success rate</span>
-            <span className="font-display text-2xl font-extrabold text-brand">99.2%</span>
+            <span className="font-display text-2xl font-extrabold text-brand">{jobs.length ? '—' : 'n/a'}</span>
           </div>
         </Card>
       </div>
@@ -150,7 +154,7 @@ export default function Overview() {
           </p>
           <Chart feePct={settings.feePct} />
           <div className="mt-4 grid gap-4 sm:grid-cols-3">
-            <Mini label="Pending auto-payouts" value={zar(892_150)} sub="Scheduled Tuesday 06:00" />
+            <Mini label="Pending auto-payouts" value={zar(0)} sub="Nothing scheduled" />
             <Mini label="Mechanic commission pool" value={zar(pool)} sub={`${100 - settings.feePct}% net to mobile mechanics`} blue />
             <Mini label="Merchant settlement fee" value="1.8%" sub="Ozow / Stitch SA Rail" />
           </div>
@@ -166,33 +170,33 @@ export default function Overview() {
           <div className="rounded-xl bg-tint p-4">
             <div className="flex items-center justify-between">
               <p className="font-semibold">Pending Partner Verifications</p>
-              <Badge tone="amber">3 required</Badge>
+              <Badge tone={pendingMechanics ? 'amber' : 'neutral'}>{pendingMechanics} required</Badge>
             </div>
             <p className="mt-1 text-sm text-muted">
-              Three mobile repair vans submitted SABS tyre-fitment compliance documents.
+              {pendingMechanics ? 'Repair partners are waiting for their documents to be reviewed.' : 'No repair partners are waiting for review.'}
             </p>
             <Link
               to="/admin/mechanics"
               className="mt-3 inline-flex h-10 items-center rounded-lg bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-dark"
             >
-              Review certificates
+              Review partners
             </Link>
           </div>
           <div className="rounded-xl bg-red-50 p-4">
             <div className="flex items-center justify-between">
               <p className="flex items-center gap-2 font-semibold">
-                <ShieldAlert size={18} className="text-danger" aria-hidden /> Flagged Pricing Dispute
+                <ShieldAlert size={18} className="text-danger" aria-hidden /> Disputes
               </p>
-              <Badge tone="red">1 urgent</Badge>
+              <Badge tone={disputed ? 'red' : 'neutral'}>{disputed} open</Badge>
             </div>
             <p className="mt-1 text-sm text-muted">
-              Transporter #TX-29 disputed a casing credit (R 1,200) on Job #TS-9410.
+              {disputed ? 'Jobs with escrow on hold need your decision.' : 'No jobs are in dispute.'}
             </p>
             <Link
               to="/admin/jobs"
               className="mt-3 inline-flex h-10 items-center rounded-lg bg-navy px-4 text-sm font-semibold text-white hover:bg-black"
             >
-              Resolve arbitrage
+              Open jobs
             </Link>
           </div>
           <div className="mt-auto pt-4">

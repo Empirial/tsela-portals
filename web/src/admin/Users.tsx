@@ -100,13 +100,13 @@ export function MechanicsPage() {
       ) : null}
 
       <section aria-label="Totals" className="grid grid-cols-3 gap-4">
-        <Stat label="Mechanics" value="98" />
-        <Stat label="Fleets" value="46" />
-        <Stat label="Drivers" value="312" />
+        <Stat label="Mechanics" value={String(mechanics.length)} />
+        <Stat label="Fleets" value={String(fleets.length)} />
+        <Stat label="Drivers" value={String(fleets.reduce((a, f) => a + f.drivers, 0))} />
       </section>
 
       <div className="flex flex-wrap items-center gap-3">
-        <Search_ q={q} setQ={setQ} placeholder="Search mechanicsâ€¦" />
+        <Search_ q={q} setQ={setQ} placeholder="Search mechanics…" />
         <StatusFilter value={filter} onChange={setFilter} />
       </div>
 
@@ -187,7 +187,7 @@ export function MechanicsPage() {
         </Table>
         {list.length === 0 ? <p className="p-6 text-center text-sm text-muted">No mechanics match.</p> : null}
         <p className="border-t border-line px-4 py-3 text-xs text-muted">
-          Showing {list.length} of 98 mobile repair partners
+          Showing {list.length} of {mechanics.length} mobile repair partners
         </p>
       </Card>
 

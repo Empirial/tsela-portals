@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tsela Live Walkthrough</title>
+<style>
+  :root {
+    --navy: #0A1F5C; --blue: #1150AB; --lime: #8CC63F; --leaf: #6AA318; --amber: #F59E0B;
+    --bg: #F3F5F9; --card: #fff; --border: #E2E8F0; --text: #1F2937; --muted: #64748B; --tint: #EEF3FB;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #dfe5ee; color: var(--text); font-family: "Plus Jakarta Sans", Inter, "Segoe UI", system-ui, sans-serif; line-height: 1.45; }
+  .slide { width: 1123px; height: 794px; margin: 24px auto; background: var(--bg); position: relative; overflow: hidden; padding: 48px 56px; box-shadow: 0 8px 30px rgba(10,31,92,.15); page-break-after: always; break-after: page; }
+  .slide.dark { background: var(--navy); color: #fff; }
+  h1 { font-size: 52px; line-height: 1.05; margin: 0 0 16px; letter-spacing: -.02em; font-weight: 800; }
+  h2 { font-size: 32px; margin: 0 0 6px; letter-spacing: -.01em; font-weight: 800; color: var(--navy); }
+  .kicker { font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+  .dark .kicker { color: var(--lime); }
+  .sub { color: var(--muted); font-size: 16px; margin: 0 0 24px; }
+  .dark .sub { color: #b8c5e6; }
+  .pg { position: absolute; bottom: 20px; right: 56px; font-size: 12px; color: var(--muted); }
+  .grid { display: grid; gap: 16px; }
+  .g3 { grid-template-columns: repeat(3, 1fr); } .g2 { grid-template-columns: repeat(2, 1fr); } .g4 { grid-template-columns: repeat(4, 1fr); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+  .card h3 { margin: 0 0 6px; font-size: 18px; color: var(--navy); }
+  .card p, .card li { font-size: 14px; margin: 4px 0; }
+  .pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 99px; background: var(--tint); color: var(--blue); text-transform: uppercase; letter-spacing: .06em; }
+  .pill.lime { background: #eaf6d6; color: #476f0c; } .pill.amber { background: #FEF3C7; color: #B45309; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 14px; overflow: hidden; border: 1px solid var(--border); font-size: 14px; }
+  th { background: var(--navy); color: #fff; text-align: left; padding: 10px 14px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+  td { padding: 10px 14px; border-top: 1px solid var(--border); vertical-align: top; }
+  code { font-family: Consolas, "SF Mono", monospace; background: var(--tint); padding: 2px 7px; border-radius: 6px; font-size: 13px; }
+  .flow { display: flex; align-items: stretch; gap: 8px; margin-top: 8px; }
+  .step { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; font-size: 13px; position: relative; }
+  .step b { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 13px; margin-bottom: 8px; }
+  .step small { color: var(--muted); display: block; margin-top: 6px; }
+  .step.owner { background: #f3f9e8; border-color: #cfe5a6; }
+  ul { padding-left: 18px; margin: 6px 0; }
+  .warn { background: #FEF3C7; border: 1px solid #f3d27a; border-radius: 12px; padding: 14px 18px; font-size: 14px; color: #6b3d05; }
+  .check li { list-style: none; margin-left: -18px; } .check li::before { content: "\2610  "; color: var(--blue); }
+  @page { size: 1123px 794px; margin: 0; }
+  @media print { body { background: none; } .slide { margin: 0; box-shadow: none; } }
+</style>
+</head>
+<body>
+
+<!-- 1 Title -->
+<section class="slide dark" style="display:flex;flex-direction:column;justify-content:center;">
+  <div class="kicker">Live system test</div>
+  <h1>Tsela end-to-end<br>walkthrough</h1>
+  <p class="sub" style="font-size:20px;max-width:640px;">From a driver's tyre alert to a paid invoice, with the owner watching every step on the dashboard.</p>
+  <div style="margin-top:24px;"><span class="pill lime">Mobile app: driver, manager, repairer</span> &nbsp; <span class="pill lime">Website: owner dashboard</span></div>
+  <div class="pg" style="color:#b8c5e6;">1</div>
+</section>
+
+<!-- 2 Objective -->
+<section class="slide">
+  <div class="kicker">Goal</div>
+  <h2>What we are proving, live, with the client</h2>
+  <p class="sub">One real job travels through the whole system. Nothing is simulated or pre-filled.</p>
+  <div class="grid g3">
+    <div class="card"><span class="pill">Mobile app</span><h3>Driver</h3><p>Reports a tyre problem with location and photos.</p></div>
+    <div class="card"><span class="pill">Mobile app</span><h3>Fleet manager</h3><p>Gets the alert, picks a repairer, approves and pays the invoice.</p></div>
+    <div class="card"><span class="pill">Mobile app</span><h3>Repairer</h3><p>Accepts the call-out, does the job, sends the invoice.</p></div>
+  </div>
+  <div class="card" style="margin-top:16px;background:#f3f9e8;border-color:#cfe5a6;">
+    <span class="pill lime">Website</span><h3>Owner dashboard</h3>
+    <p>Open on a big screen the whole time. Each step above should appear here: the new job, the dispatch, the status changes, the invoice and the payment.</p>
+  </div>
+  <div class="grid g3" style="margin-top:16px;">
+    <div class="card"><h3>Success looks like</h3><ul><li>Job completed from report to payment</li><li>Every step visible to the owner</li><li>No manual fixes mid-demo</li></ul></div>
+    <div class="card"><h3>Who is in the room</h3><ul><li>The owner (client)</li><li>Us, playing the 4 app roles</li></ul></div>
+    <div class="card"><h3>Devices needed</h3><ul><li>3 phones (or 3 emulator windows)</li><li>1 laptop / screen for the website</li></ul></div>
+  </div>
+  <div class="pg">2</div>
+</section>
+
+<!-- 3 Credentials -->
+<section class="slide">
+  <div class="kicker">Accounts</div>
+  <h2>Demo logins to create</h2>
+  <p class="sub">Proposed credentials. Change them freely before we create the accounts.</p>
+  <table>
+    <tr><th>Who</th><th>Where they sign in</th><th>Email</th><th>Password</th><th>Role</th></tr>
+    <tr><td><b>Brave Logistics</b></td><td>Mobile app</td><td><code>manager@bravelogistics.demo</code></td><td><code>Tsela#Brave1</code></td><td>Fleet manager</td></tr>
+    <tr><td><b>Driver</b> (Brave Logistics)</td><td>Mobile app</td><td><code>driver@bravelogistics.demo</code></td><td><code>Tsela#Driver1</code></td><td>Driver, linked to a Brave truck</td></tr>
+    <tr><td><b>Trojan Mechanics</b></td><td>Mobile app</td><td><code>dispatch@trojanmechanics.demo</code></td><td><code>Tsela#Trojan1</code></td><td>Repairer</td></tr>
+    <tr><td><b>Apex Mechanics</b></td><td>Mobile app</td><td><code>dispatch@apexmechanics.demo</code></td><td><code>Tsela#Apex1</code></td><td>Repairer</td></tr>
+    <tr><td><b>Owner</b></td><td>Website <code>/admin/login</code></td><td><code>owner@tsela.demo</code></td><td><code>Tsela#Owner1</code></td><td>Platform owner</td></tr>
+  </table>
+  <div class="grid g2" style="margin-top:18px;">
+    <div class="card"><h3>Why two repairers?</h3><p>The manager sees both nearby and chooses one. Shows the choice step and that the other repairer is not notified.</p></div>
+    <div class="card"><h3>Set up before the demo</h3><ul><li>Brave has at least one truck assigned to the driver</li><li>Both repairers are approved and online</li><li>Owner account is active</li></ul></div>
+  </div>
+  <div class="pg">3</div>
+</section>
+
+<!-- 4 Flow -->
+<section class="slide">
+  <div class="kicker">The flow</div>
+  <h2>One job, start to finish</h2>
+  <p class="sub">Green boxes are what the owner should see change on the dashboard.</p>
+  <div class="flow">
+    <div class="step"><b>1</b><strong>Driver reports</strong>Issue type, photos, location.<small>Driver app</small></div>
+    <div class="step owner"><b>2</b><strong>Manager notified</strong>New incident appears.<small>Manager app + owner</small></div>
+    <div class="step"><b>3</b><strong>Manager picks</strong>Chooses Trojan or Apex from nearby list.<small>Manager app</small></div>
+    <div class="step owner"><b>4</b><strong>Repairer accepts</strong>Call-out request accepted.<small>Repairer app + owner</small></div>
+  </div>
+  <div class="flow" style="margin-top:12px;">
+    <div class="step owner"><b>5</b><strong>Job in progress</strong>Repairer travels, arrives, fixes. Driver sees live status.<small>All apps + owner</small></div>
+    <div class="step owner"><b>6</b><strong>Invoice sent</strong>Repairer submits the invoice.<small>Repairer app + owner</small></div>
+    <div class="step owner"><b>7</b><strong>Manager pays</strong>Reviews, approves, pays.<small>Manager app + owner</small></div>
+    <div class="step owner"><b>8</b><strong>Job closed</strong>Payment, platform fee and payout recorded.<small>Owner dashboard</small></div>
+  </div>
+  <div class="card" style="margin-top:22px;"><h3>Repairer not chosen</h3><p>Show that the second repairer (the one not selected) sees nothing for this job. This proves the dispatch is targeted.</p></div>
+  <div class="pg">4</div>
+</section>
+
+<!-- 5 Script -->
+<section class="slide">
+  <div class="kicker">Run sheet</div>
+  <h2>Step-by-step script</h2>
+  <table style="font-size:13px;">
+    <tr><th style="width:36px">#</th><th style="width:150px">Who / device</th><th>Action</th><th style="width:300px">Owner dashboard should show</th></tr>
+    <tr><td>1</td><td>Driver, phone 1</td><td>Sign in, tap report a problem, choose issue, add photos, confirm location, submit.</td><td>New open incident for Brave Logistics.</td></tr>
+    <tr><td>2</td><td>Manager, phone 2</td><td>Notification arrives. Open the incident, review photos and location.</td><td>Incident status: awaiting dispatch.</td></tr>
+    <tr><td>3</td><td>Manager, phone 2</td><td>Open nearby repairers, compare, request Trojan Mechanics.</td><td>Job dispatched to Trojan.</td></tr>
+    <tr><td>4</td><td>Trojan, phone 3</td><td>New call-out request. Review and accept.</td><td>Job accepted by Trojan.</td></tr>
+    <tr><td>5</td><td>Trojan, phone 3</td><td>Start route, mark arrived, complete the repair. Driver watches status and ETA.</td><td>Status moves en route, on site, completed.</td></tr>
+    <tr><td>6</td><td>Trojan, phone 3</td><td>Generate and send the invoice.</td><td>Invoice pending under Payments.</td></tr>
+    <tr><td>7</td><td>Manager, phone 2</td><td>Open billing, review the invoice, approve and pay.</td><td>Invoice paid.</td></tr>
+    <tr><td>8</td><td>Owner, laptop</td><td>Walk through Overview, Jobs, Payments, then the Brave and Trojan detail pages.</td><td>Full job history, fee and payout.</td></tr>
+  </table>
+  <div class="pg">5</div>
+</section>
+
+<!-- 6 Readiness -->
+<section class="slide">
+  <div class="kicker">Readiness</div>
+  <h2>What must be true before the demo</h2>
+  <div class="warn" style="margin:12px 0 18px;"><b>Important:</b> today the app runs on built-in sample data held in each phone's memory, and sign-in accepts any email. A report on the driver's phone will <b>not</b> reach the manager's phone or the website. For this walkthrough to work live, the apps and website must share one real backend.</div>
+  <div class="grid g2">
+    <div class="card">
+      <h3>To build</h3>
+      <ul>
+        <li>Real backend with sign-in for the 5 accounts</li>
+        <li>Shared job data and live notifications between driver, manager, repairer</li>
+        <li>Owner dashboard reading the same data</li>
+        <li>Payment recorded (can be a simulated payment step for the demo)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>To clean</h3>
+      <ul>
+        <li>Remove all sample trucks, drivers, jobs, invoices and mechanics</li>
+        <li>Keep only the 5 demo accounts plus Brave's truck(s)</li>
+        <li>Empty states look right on every screen</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px;"><h3>Checklist the day before</h3>
+    <ul class="check" style="columns:2;">
+      <li>All 5 accounts can sign in</li><li>Driver is linked to a Brave truck</li><li>Both repairers approved and online</li><li>Location permission granted on phones</li>
+      <li>Phones charged, on good data or Wi-Fi</li><li>Owner dashboard open and signed in</li><li>One full dry run completed</li><li>Test data reset after the dry run</li>
+    </ul>
+  </div>
+  <div class="pg">6</div>
+</section>
+
+</body>
+</html>

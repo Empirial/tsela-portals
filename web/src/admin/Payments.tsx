@@ -8,7 +8,7 @@ import { payouts, subscriptions } from './data'
 
 type Tab = 'ledger' | 'subs'
 
-const bars = [62, 74, 88, 68, 96, 46, 40] // % of max, mock
+const bars = [0, 0, 0, 0, 0, 0, 0] // % of max: fills in from real payouts once the API exists
 const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri (Peak)', 'Sat', 'Sun']
 
 export default function Payments() {
@@ -43,10 +43,10 @@ export default function Payments() {
       />
 
       <section aria-label="Treasury" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Stat label="Ring-fenced escrow" value="R 384,200" sub="Held across 28 corridor-active jobs pending fitment sign-off" icon={Landmark} />
-        <Stat label="Mechanic payouts owed" value={zar(128_450.5)} sub="Net payables to 31 approved truck mechanics" icon={Banknote} />
-        <Stat label="Take-rate revenue" value={zar(147_400)} sub={`${settings.feePct}.0% take rate • +18.4% vs last month`} />
-        <Stat label="Fleet SaaS ARR/MRR" value="R 189,000" sub="/mo • 42 fleets • 392 licensed rigs" dark />
+        <Stat label="Ring-fenced escrow" value={zar(rows.filter((r) => !r.signed).reduce((a, r) => a + r.gross, 0))} sub={`Held across ${rows.filter((r) => !r.signed).length} jobs pending fitment sign-off`} icon={Landmark} />
+        <Stat label="Mechanic payouts owed" value={zar(readyTotal)} sub={`Net payables to ${new Set(ready.map((r) => r.mechanic)).size} mechanics`} icon={Banknote} />
+        <Stat label="Take-rate revenue" value={zar(rows.reduce((a, r) => a + r.fee, 0))} sub={`${settings.feePct}.0% take rate`} />
+        <Stat label="Fleet SaaS ARR/MRR" value={zar(subscriptions.reduce((a, s) => a + s.monthly, 0))} sub={`/mo • ${subscriptions.length} fleets • ${subscriptions.reduce((a, s) => a + s.rigs, 0)} licensed rigs`} dark />
       </section>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -96,6 +96,13 @@ export default function Payments() {
             <Table
               head={['Job', 'Mechanic', 'Fleet', 'Gross invoiced', `${settings.feePct}% Tsela fee`, `VAT (${settings.vatPct}%)`, 'Net payout owed', 'Driver ePOD', 'Settlement']}
             >
+              {rows.length === 0 ? (
+                <tr>
+                  <td colSpan={9} className="px-3 py-8 text-center text-sm text-muted">
+                    No payouts yet. They appear here once a fleet pays an invoice.
+                  </td>
+                </tr>
+              ) : null}
               {rows.map((r) => {
                 const done = released.includes(r.job)
                 return (
