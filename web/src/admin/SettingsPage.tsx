@@ -1,7 +1,6 @@
-import { RotateCcw, Save } from 'lucide-react'
+import { Plus, RotateCcw, Save, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Button, Card, PageHeader, Toggle } from '../components/ui'
-import { zar } from '../lib/format'
 import { defaultSettings, useSettings, type Settings } from '../lib/settings'
 
 function NumberField({
@@ -66,16 +65,11 @@ export default function SettingsPage() {
   const errors = {
     feePct: !(draft.feePct >= 0 && draft.feePct <= 30) ? 'Enter a fee between 0% and 30%.' : '',
     vatPct: !(draft.vatPct >= 0 && draft.vatPct <= 30) ? 'Enter a VAT rate between 0% and 30%.' : '',
-    baseFee: !(draft.callout.baseFee >= 0) ? 'Enter an amount of R0 or more.' : '',
-    heavy: !(draft.callout.heavyRigSurcharge >= 0) ? 'Enter an amount of R0 or more.' : '',
-    night: !(draft.callout.nightSurchargePct >= 0 && draft.callout.nightSurchargePct <= 100) ? 'Enter 0% to 100%.' : '',
-    incl: !(draft.callout.includedKm >= 0) ? 'Enter 0 km or more.' : '',
-    perKm: !(draft.callout.perExtraKm >= 0) ? 'Enter an amount of R0 or more.' : '',
+    areas: draft.corridors.some((c) => !c.name.trim() || !(c.radiusKm >= 5 && c.radiusKm <= 150))
+      ? 'Every area needs a name and a dispatch radius of 5 to 150 km.'
+      : '',
   }
   const invalid = Object.values(errors).some(Boolean)
-
-  const setCallout = (k: keyof Settings['callout']) => (n: number) =>
-    setDraft((d) => ({ ...d, callout: { ...d.callout, [k]: n } }))
 
   const setCorridor = (id: string, patch: Partial<Settings['corridors'][number]>) =>
     setDraft((d) => ({
@@ -83,15 +77,14 @@ export default function SettingsPage() {
       corridors: d.corridors.map((c) => (c.id === id ? { ...c, ...patch } : c)),
     }))
 
-  // Worked example so the owner can sanity-check the rules before saving
-  const exKm = 22
-  const c = draft.callout
-  const exBase = c.baseFee + c.heavyRigSurcharge
-  const exDist = Math.max(0, exKm - c.includedKm) * c.perExtraKm
-  const exNight = ((exBase + exDist) * c.nightSurchargePct) / 100
-  const exTotal = exBase + exDist + exNight
-  const valid = !invalid
-  const exFee = (exTotal * draft.feePct) / 100
+  const addCorridor = () =>
+    setDraft((d) => ({
+      ...d,
+      corridors: [...d.corridors, { id: `area-${Date.now()}`, name: '', route: '', enabled: true, radiusKm: 50 }],
+    }))
+
+  const removeCorridor = (id: string) =>
+    setDraft((d) => ({ ...d, corridors: d.corridors.filter((c) => c.id !== id) }))
 
   const doSave = () => {
     if (invalid) return
@@ -105,7 +98,7 @@ export default function SettingsPage() {
       <PageHeader
         eyebrow="Commercial & admin"
         title="Platform Settings"
-        sub="Platform fee percentage, call-out pricing rules and the areas Tsela covers."
+        sub="Platform fee percentage, and the areas where Tsela does business."
         actions={
           <>
             <Button
@@ -131,7 +124,7 @@ export default function SettingsPage() {
         </p>
       ) : null}
 
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid gap-6">
         <Card className="flex flex-col gap-5">
           <h2 className="font-display text-xl font-extrabold">Platform fee &amp; tax</h2>
           <NumberField
@@ -156,53 +149,50 @@ export default function SettingsPage() {
           />
         </Card>
 
-        <Card className="flex flex-col gap-5">
-          <h2 className="font-display text-xl font-extrabold">Call-out pricing rules</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <NumberField id="base" label="Base call-out fee" prefix="R" value={c.baseFee} onChange={setCallout('baseFee')} error={errors.baseFee} />
-            <NumberField id="heavy" label="Heavy rig surcharge" prefix="R" value={c.heavyRigSurcharge} onChange={setCallout('heavyRigSurcharge')} error={errors.heavy} />
-            <NumberField id="night" label="Night surcharge" suffix="%" max={100} value={c.nightSurchargePct} onChange={setCallout('nightSurchargePct')} error={errors.night} />
-            <NumberField id="incl" label="Included distance" suffix="km" value={c.includedKm} onChange={setCallout('includedKm')} error={errors.incl} />
-            <NumberField id="perkm" label="Per extra km" prefix="R" value={c.perExtraKm} onChange={setCallout('perExtraKm')} error={errors.perKm} />
-          </div>
-          <div className="rounded-xl bg-tint p-4 text-sm">
-            <p className="font-semibold">Example: heavy rig, {exKm} km away, at night</p>
-            {valid ? (
-              <>
-                <p className="num mt-1 text-muted">
-                  Call-out {zar(exBase)} + distance {zar(exDist)} + night {zar(exNight)}
-                </p>
-                <p className="num font-display text-xl font-extrabold">{zar(exTotal)}</p>
-                <p className="num text-xs text-muted">
-                  Tsela fee at {draft.feePct}%: {zar(exFee)} • Mechanic receives {zar(exTotal - exFee)}
-                </p>
-              </>
-            ) : (
-              <p className="mt-1 text-danger">Fix the highlighted fields to see the example.</p>
-            )}
-          </div>
-          <p className="text-xs text-muted">
-            These rules are placeholders. Set the amounts you actually want to charge.
-          </p>
-        </Card>
       </div>
 
       <Card>
-        <h2 className="font-display text-xl font-extrabold">Coverage areas</h2>
-        <p className="mt-1 text-sm text-muted">
-          Corridors where fleets can request a mechanic, and how far from the road a van may be dispatched.
-        </p>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 className="font-display text-xl font-extrabold">Coverage areas</h2>
+            <p className="mt-1 text-sm text-muted">
+              The areas where you do business. Fleets can only request a mechanic inside an enabled area, within its
+              dispatch radius.
+            </p>
+          </div>
+          <Button variant="secondary" icon={Plus} onClick={addCorridor}>
+            Add coverage area
+          </Button>
+        </div>
+        {errors.areas ? <p className="mt-3 text-xs font-semibold text-danger">{errors.areas}</p> : null}
+        {draft.corridors.length === 0 ? (
+          <p className="mt-4 rounded-xl bg-tint p-4 text-sm text-muted">
+            No coverage areas yet. Add the first area you want to operate in.
+          </p>
+        ) : null}
         <ul className="mt-4 divide-y divide-line">
           {draft.corridors.map((cor) => (
             <li key={cor.id} className="flex flex-wrap items-center gap-4 py-4">
               <Toggle
                 checked={cor.enabled}
                 onChange={(v) => setCorridor(cor.id, { enabled: v })}
-                label={`${cor.name} enabled`}
+                label={`${cor.name || 'New area'} enabled`}
               />
-              <div className="min-w-48 flex-1">
-                <p className="font-semibold">{cor.name}</p>
-                <p className="text-xs text-muted">{cor.route}</p>
+              <div className="grid min-w-64 flex-1 gap-2 sm:grid-cols-2">
+                <input
+                  value={cor.name}
+                  onChange={(e) => setCorridor(cor.id, { name: e.target.value })}
+                  placeholder="Area name, e.g. N1 Western"
+                  aria-label="Area name"
+                  className="h-10 rounded-lg border border-slate-300 px-3 text-sm font-semibold outline-none focus:border-brand"
+                />
+                <input
+                  value={cor.route}
+                  onChange={(e) => setCorridor(cor.id, { route: e.target.value })}
+                  placeholder="Route or towns covered"
+                  aria-label="Route or towns covered"
+                  className="h-10 rounded-lg border border-slate-300 px-3 text-sm outline-none focus:border-brand"
+                />
               </div>
               <label className="flex items-center gap-2 text-sm">
                 <span className="text-muted">Dispatch radius</span>
@@ -214,10 +204,17 @@ export default function SettingsPage() {
                   value={Number.isNaN(cor.radiusKm) ? '' : cor.radiusKm}
                   onChange={(e) => setCorridor(cor.id, { radiusKm: e.target.value === '' ? NaN : Number(e.target.value) })}
                   className="num h-10 w-20 rounded-lg border border-slate-300 px-2 text-right outline-none focus:border-brand disabled:opacity-50"
-                  aria-label={`${cor.name} dispatch radius in km`}
+                  aria-label={`${cor.name || 'New area'} dispatch radius in km`}
                 />
                 <span className="text-muted">km</span>
               </label>
+              <button
+                aria-label={`Remove ${cor.name || 'area'}`}
+                onClick={() => removeCorridor(cor.id)}
+                className="rounded-lg p-2 text-muted hover:bg-red-50 hover:text-danger"
+              >
+                <Trash2 size={18} />
+              </button>
             </li>
           ))}
         </ul>

@@ -132,6 +132,9 @@ export function MechanicsPage() {
                         {r.name}
                       </Link>
                       <p className="text-xs text-muted">{r.base}</p>
+                      <p className="text-xs text-muted">
+                        {r.location.city}, {r.location.province}
+                      </p>
                       <p className="num text-xs text-muted">CIPC: {r.cipc}</p>
                       {r.note ? <p className="text-xs font-semibold text-danger">{r.note}</p> : null}
                     </div>
@@ -144,7 +147,7 @@ export function MechanicsPage() {
                 <td className="num px-3 py-4">
                   {r.rating ? (
                     <>
-                      <span className="font-bold">{r.rating} â˜…</span>
+                      <span className="font-bold">{r.rating} ★</span>
                       <p className="text-xs text-muted">{r.rigs} heavy rig repairs</p>
                     </>
                   ) : (

@@ -24,10 +24,25 @@ export type Job = {
 
 export const jobs: Job[] = []
 
+export type MechanicLocation = {
+  address: string
+  city: string
+  province: string
+  gps: string
+}
+
+export const LOCATION_PENDING: MechanicLocation = {
+  address: 'Not provided yet',
+  city: 'Not provided yet',
+  province: 'Not provided yet',
+  gps: 'Not provided yet',
+}
+
 export type Mechanic = {
   initials: string
   name: string
   base: string
+  location: MechanicLocation
   cipc: string
   vans: number
   radius: string
@@ -40,8 +55,8 @@ export type Mechanic = {
 }
 
 export const mechanics: Mechanic[] = [
-  { initials: 'TM', name: 'Trojan Mechanics', base: 'Base to be confirmed', cipc: 'Pending', vans: 1, radius: '50km', rating: null, rigs: 0, badges: [], bank: 'Bank details pending', state: 'Active' },
-  { initials: 'AM', name: 'Apex Mechanics', base: 'Base to be confirmed', cipc: 'Pending', vans: 1, radius: '50km', rating: null, rigs: 0, badges: [], bank: 'Bank details pending', state: 'Active' },
+  { initials: 'TM', name: 'Trojan Mechanics', base: 'Base to be confirmed', location: LOCATION_PENDING, cipc: 'Pending', vans: 1, radius: '50km', rating: null, rigs: 0, badges: [], bank: 'Bank details pending', state: 'Active' },
+  { initials: 'AM', name: 'Apex Mechanics', base: 'Base to be confirmed', location: LOCATION_PENDING, cipc: 'Pending', vans: 1, radius: '50km', rating: null, rigs: 0, badges: [], bank: 'Bank details pending', state: 'Active' },
 ]
 
 export type Fleet = {

@@ -117,7 +117,7 @@ export default function AdminLayout() {
       ) : null}
 
       <div className="min-w-0">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-line bg-white/90 px-4 backdrop-blur lg:px-8">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 bg-white/90 px-4 backdrop-blur lg:px-8">
           <button
             aria-label="Open menu"
             className="rounded-lg p-2 text-ink hover:bg-canvas lg:hidden"

@@ -87,7 +87,7 @@ export default function Jobs() {
         <Button variant="secondary" icon={RefreshCw} aria-label="Refresh" onClick={() => setQ('')} />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_380px]">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
         <Card className="p-0">
           <Table head={['Job & highway', 'Fleet vehicle', 'Issue & axle', 'Mobile mechanic', 'Status']}>
             {list.map((j) => {

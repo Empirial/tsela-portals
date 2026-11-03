@@ -119,6 +119,11 @@ export default function MechanicDetail() {
                 ]
               : []),
             ['Base station', mechanic.base],
+            ['Street address', mechanic.location.address],
+            ['City', mechanic.location.city],
+            ['Province', mechanic.location.province],
+            ['GPS coordinates', mechanic.location.gps],
+            ['Service radius', mechanic.radius],
             ['Payout account', mechanic.bank],
             ...(profile ? [['Services', profile.services.join(', ')]] : []),
           ].map(([k, v]) => (

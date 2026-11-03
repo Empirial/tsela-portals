@@ -8,8 +8,6 @@ import { payouts, subscriptions } from './data'
 
 type Tab = 'ledger' | 'subs'
 
-const bars = [0, 0, 0, 0, 0, 0, 0] // % of max: fills in from real payouts once the API exists
-const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri (Peak)', 'Sat', 'Sun']
 
 export default function Payments() {
   const { settings } = useSettings()
@@ -141,22 +139,6 @@ export default function Payments() {
                 )
               })}
             </Table>
-          </Card>
-
-          <Card>
-            <h2 className="font-display text-lg font-extrabold">Corridor payout volume &amp; platform fee take (7 days)</h2>
-            <p className="text-sm text-muted">Daily gross payments processed vs the {settings.feePct}% Tsela fee realised.</p>
-            <div className="mt-4 flex h-48 items-end gap-3" role="img" aria-label="Bar chart of daily payouts for the last 7 days">
-              {bars.map((b, i) => (
-                <div key={dayLabels[i]} className="flex flex-1 flex-col items-center gap-2">
-                  <div className="flex h-40 w-full flex-col justify-end gap-0.5">
-                    <div className="rounded-t bg-navy" style={{ height: `${b * (settings.feePct / 100)}%` }} />
-                    <div className="rounded-t bg-brand" style={{ height: `${b * 0.6}%` }} />
-                  </div>
-                  <span className="text-[11px] font-bold text-muted">{dayLabels[i]}</span>
-                </div>
-              ))}
-            </div>
           </Card>
         </>
       ) : (

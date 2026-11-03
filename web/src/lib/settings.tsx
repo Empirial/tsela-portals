@@ -12,27 +12,13 @@ export type Settings = {
   /** Tsela's cut of every job, as a percentage (product spec: owner-configurable) */
   feePct: number
   vatPct: number
-  callout: {
-    baseFee: number
-    heavyRigSurcharge: number
-    nightSurchargePct: number
-    includedKm: number
-    perExtraKm: number
-  }
   corridors: Corridor[]
 }
 
-// Placeholder defaults: fee and VAT come from the mockups, pricing rules are samples to be replaced.
+// Placeholder defaults: fee and VAT come from the mockups; coverage areas are starting points the owner edits.
 export const defaultSettings: Settings = {
   feePct: 8,
   vatPct: 15,
-  callout: {
-    baseFee: 1200,
-    heavyRigSurcharge: 250,
-    nightSurchargePct: 25,
-    includedKm: 15,
-    perExtraKm: 12,
-  },
   corridors: [
     { id: 'n1', name: 'N1 Western', route: 'Johannesburg ⇄ Cape Town', enabled: true, radiusKm: 50 },
     { id: 'n3', name: 'N3 Natal', route: 'Gauteng ⇄ Durban', enabled: true, radiusKm: 50 },
