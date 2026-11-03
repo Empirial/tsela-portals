@@ -85,12 +85,6 @@ export default function AdminLayout() {
         <div className="sticky top-0 flex h-screen flex-col overflow-y-auto">
           <Brand />
           {nav}
-          <div className="mt-auto m-4 rounded-xl bg-tint p-3 text-xs text-muted">
-            <p className="flex items-center gap-2 font-bold text-ink">
-              <span className="h-2 w-2 rounded-full bg-brand" /> CORRIDOR OPS
-            </p>
-            <p className="mt-1">N1, N3 &amp; N4 real-time dispatch grid active.</p>
-          </div>
         </div>
       </aside>
 
