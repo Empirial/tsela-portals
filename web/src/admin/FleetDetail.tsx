@@ -3,7 +3,9 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Badge, Button, Card, PageHeader, Stat, Table, Tabs, type Tone } from '../components/ui'
 import { useOverrides } from '../lib/overrides'
-import { drivers, fleetDocs, fleetProfiles, fleets, fleetSlug, trucks, type FleetDoc, type Truck } from './data'
+import { useLive } from '../lib/live'
+import { useOrgDocs } from '../lib/orgDocs'
+import { fleetDocKinds, fleetSlug, type FleetDoc, type Truck } from './data'
 import { stateTone } from './Users'
 
 type Tab = 'trucks' | 'drivers' | 'documents'
@@ -23,11 +25,12 @@ const truckTone: Record<Truck['state'], Tone> = {
 
 export default function FleetDetail() {
   const { id } = useParams()
+  const { drivers, fleetProfiles, fleets, trucks } = useLive()
   const fleet = fleets.find((f) => fleetSlug(f.name) === id)
+  const { docs, review, openDoc } = useOrgDocs(fleet?.id, fleetDocKinds)
   const [tab, setTab] = useState<Tab>('trucks')
   const [fleetState, setFleetState] = useOverrides('tsela.fleets.state')
   const [driverState, setDriverState] = useOverrides('tsela.drivers.state')
-  const [docState, setDocState] = useOverrides('tsela.fleetdocs.state')
 
   if (!fleet) {
     return (
@@ -46,10 +49,6 @@ export default function FleetDetail() {
   const myDrivers = drivers.filter((d) => d.fleet === fleet.name)
   const dState = (name: string, base: string) => driverState[name] ?? base
   const profile = fleetProfiles[fleet.name]
-  const docs = fleetDocs(fleet.state).map((d) => ({
-    ...d,
-    state: (docState[`${fleet.name}|${d.name}`] as FleetDoc['state'] | undefined) ?? d.state,
-  }))
   const docsToReview = docs.filter((d) => d.state === 'Pending review').length
 
   return (
@@ -99,7 +98,7 @@ export default function FleetDetail() {
               ['Phone', profile.phone],
               ['Email', profile.email],
               ['Business address', profile.address],
-              ['Joined Tsela', profile.since],
+              ['Joined Tsela Assist', profile.since],
               ['Subscription plan', fleet.plan],
             ].map(([k, v]) => (
               <div key={k}>
@@ -129,41 +128,49 @@ export default function FleetDetail() {
             </p>
           ) : null}
           <Table head={['Document', 'File', 'Uploaded', 'Status']}>
-            {docs.map((d) => {
-              const key = `${fleet.name}|${d.name}`
-              return (
-                <tr key={d.name}>
-                  <td className="px-3 py-4">
-                    <span className="flex items-center gap-2 font-semibold">
-                      <FileText size={16} className="text-muted" aria-hidden /> {d.name}
-                    </span>
-                  </td>
-                  <td className="px-3 py-4 text-xs text-muted">
-                    {d.file ? `${d.file} • ${d.size}` : '—'}
-                  </td>
-                  <td className="num px-3 py-4 text-xs text-muted">{d.uploaded}</td>
-                  <td className="px-3 py-4">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge tone={docTone[d.state]}>{d.state}</Badge>
-                      {d.state === 'Pending review' ? (
-                        <>
-                          <Button className="h-8 px-3 text-xs" onClick={() => setDocState(key, 'Verified')}>
-                            Approve
-                          </Button>
-                          <Button variant="danger" className="h-8 px-3 text-xs" onClick={() => setDocState(key, 'Rejected')}>
-                            Reject
-                          </Button>
-                        </>
-                      ) : null}
-                    </div>
-                  </td>
-                </tr>
-              )
-            })}
+            {docs.map((d) => (
+              <tr key={d.id}>
+                <td className="px-3 py-4">
+                  <span className="flex items-center gap-2 font-semibold">
+                    <FileText size={16} className="text-muted" aria-hidden /> {d.name}
+                  </span>
+                </td>
+                <td className="px-3 py-4 text-xs">
+                  {d.state === 'Not uploaded' ? (
+                    <span className="text-muted">-</span>
+                  ) : (
+                    <button className="font-semibold text-brand hover:underline" onClick={() => void openDoc(d.id)}>
+                      View file
+                    </button>
+                  )}
+                </td>
+                <td className="num px-3 py-4 text-xs text-muted">{d.uploaded}</td>
+                <td className="px-3 py-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge tone={docTone[d.state]}>{d.state}</Badge>
+                    {d.state === 'Pending review' ? (
+                      <>
+                        <Button className="h-8 px-3 text-xs" onClick={() => void review(d.id, 'verified')}>
+                          Approve
+                        </Button>
+                        <Button
+                          variant="danger"
+                          className="h-8 px-3 text-xs"
+                          onClick={() => {
+                            const reason = window.prompt('Why is this document rejected? The company will see this.')
+                            if (reason) void review(d.id, 'rejected', reason)
+                          }}
+                        >
+                          Reject
+                        </Button>
+                      </>
+                    ) : null}
+                    {d.state === 'Rejected' && d.reason ? <span className="text-xs text-muted">{d.reason}</span> : null}
+                  </div>
+                </td>
+              </tr>
+            ))}
           </Table>
-          <p className="border-t border-line px-4 py-3 text-xs text-muted">
-            Sample documents. Opening the files will work once document storage is connected.
-          </p>
         </Card>
       ) : null}
 

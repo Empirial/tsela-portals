@@ -1,19 +1,18 @@
-import { Download, Lock, RefreshCw, Repeat, Search } from 'lucide-react'
+import { Download, RefreshCw, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Badge, Button, Card, cx, PageHeader, Stat, Table } from '../components/ui'
 import { zar } from '../lib/format'
 import { useSettings } from '../lib/settings'
-import { jobs } from './data'
+import { useLive } from '../lib/live'
 
 const filters = ['All highways', 'N1', 'N3', 'N4'] as const
 
 export default function Jobs() {
   const { settings } = useSettings()
+  const { jobs } = useLive()
   const [q, setQ] = useState('')
   const [hw, setHw] = useState<(typeof filters)[number]>('All highways')
   const [selected, setSelected] = useState(jobs[0]?.id ?? '')
-  const [settled, setSettled] = useState<string[]>([])
-  const [frozen, setFrozen] = useState<string[]>([])
 
   const list = useMemo(() => {
     const s = q.trim().toLowerCase()
@@ -22,14 +21,16 @@ export default function Jobs() {
         (hw === 'All highways' || j.highway.startsWith(hw)) &&
         (!s || [j.id, j.plate, j.fleet, j.mechanic, j.place].some((v) => v.toLowerCase().includes(s))),
     )
-  }, [q, hw])
+  }, [q, hw, jobs])
 
   const job = jobs.find((j) => j.id === selected) ?? jobs[0]
-  const net = job ? job.gross / (1 + settings.vatPct / 100) : 0 // ex-VAT subtotal
-  const vat = job ? job.gross - net : 0
-  const fee = job ? (job.gross * settings.feePct) / 100 : 0
-  const live = jobs.filter((j) => ['En route', 'On site', 'Fitting'].includes(j.status)).length
-  const signoff = jobs.filter((j) => j.status === 'Fitting').length
+  // Real invoice amounts when the mechanic has invoiced; otherwise the sample maths from the settings.
+  const inv = job?.invoice
+  const net = inv ? inv.subtotal : job ? job.gross / (1 + settings.vatPct / 100) : 0 // ex-VAT subtotal
+  const vat = inv ? inv.vat : job ? job.gross - net : 0
+  const fee = inv ? inv.fee : job ? (job.gross * settings.feePct) / 100 : 0
+  const live = jobs.filter((j) => ['Dispatched', 'En route', 'On site'].includes(j.status)).length
+  const signoff = jobs.filter((j) => j.status === 'Invoiced').length
   const disputed = jobs.filter((j) => j.status === 'Escrow on hold').length
   const paid = jobs.filter((j) => j.status === 'Bank cleared').length
   const total = jobs.reduce((a, j) => a + j.gross, 0)
@@ -53,7 +54,7 @@ export default function Jobs() {
       <section aria-label="Job totals" className="grid grid-cols-2 gap-4 lg:grid-cols-5">
         <Stat label="All jobs" value={String(jobs.length)} sub={`This month (${zar(total)})`} />
         <Stat label="In progress / live" value={String(live)} sub="Dispatched and on the road" />
-        <Stat label="Fleet sign-off" value={String(signoff)} sub="Torque verification pending" />
+        <Stat label="Fleet sign-off" value={String(signoff)} sub="Invoice awaiting the fleet" />
         <Stat label="Disputed / escrow" value={String(disputed)} sub="Casing liability audit" />
         <Stat label="Settled & paid" value={String(paid)} sub="Instant EFT cleared" />
       </section>
@@ -91,8 +92,8 @@ export default function Jobs() {
         <Card className="p-0">
           <Table head={['Job & highway', 'Fleet vehicle', 'Issue & axle', 'Mobile mechanic', 'Status']}>
             {list.map((j) => {
-              const status = settled.includes(j.id) ? 'Bank cleared' : frozen.includes(j.id) ? 'Escrow on hold' : j.status
-              const tone = settled.includes(j.id) ? 'neutral' : frozen.includes(j.id) ? 'red' : j.statusTone
+              const status = j.status
+              const tone = j.statusTone
               return (
                 <tr
                   key={j.id}
@@ -107,9 +108,11 @@ export default function Jobs() {
                     >
                       #{j.id}
                     </button>
-                    <div className="mt-1">
-                      <Badge tone="blue">{j.highway}</Badge>
-                    </div>
+                    {j.highway ? (
+                      <div className="mt-1">
+                        <Badge tone="blue">{j.highway}</Badge>
+                      </div>
+                    ) : null}
                     <p className="mt-1 text-xs text-muted">
                       {j.ago} • {j.place}
                     </p>
@@ -124,7 +127,7 @@ export default function Jobs() {
                   <td className="px-3 py-4">
                     <div className="flex flex-wrap gap-1">
                       <Badge tone="amber">{j.issue}</Badge>
-                      <Badge tone="blue">{j.axle}</Badge>
+                      {j.axle ? <Badge tone="blue">{j.axle}</Badge> : null}
                     </div>
                     <p className="num mt-1 text-xs text-muted">{j.tyre}</p>
                   </td>
@@ -161,16 +164,24 @@ export default function Jobs() {
           </div>
           <div className="rounded-xl bg-tint p-3 text-sm">
             <p className="font-semibold">
-              {job.highway.split(' ')[0]} Corridor • {job.place}
+              {job.highway ? job.highway.split(' ')[0] + ' Corridor • ' : ''}{job.place}
             </p>
-            <p className="text-xs text-muted">Issue: {job.issue} • {job.axle}</p>
+            <p className="text-xs text-muted">Issue: {job.issue}{job.axle ? ' • ' + job.axle : ''} • {job.mechanic}</p>
           </div>
+
+          {job.photos && (job.photos.driver.length || job.photos.before.length || job.photos.after.length) ? (
+            <div className="space-y-3">
+              <Photos title="Driver photos" urls={job.photos.driver} />
+              <Photos title="Before (mechanic)" urls={job.photos.before} />
+              <Photos title="After (mechanic)" urls={job.photos.after} />
+            </div>
+          ) : null}
 
           <div className="rounded-xl bg-tint p-4">
             <p className="text-[11px] font-bold uppercase text-brand">SARS compliant pro-forma</p>
             <div className="mt-1 flex items-center justify-between">
-              <h3 className="font-display text-lg font-extrabold">Tax Invoice #INV-24-{job.id.slice(3)}</h3>
-              <Badge tone="blue">VAT @ {settings.vatPct}%</Badge>
+              <h3 className="font-display text-lg font-extrabold">{inv ? 'Tax Invoice ' + inv.number : 'Pro-forma: no invoice yet'}</h3>
+              <Badge tone="blue">VAT @ {inv ? inv.vatPct : settings.vatPct}%</Badge>
             </div>
             <dl className="num mt-3 space-y-1 text-sm">
               <Row k="Subtotal (excl. VAT)" v={zar(net, 2)} />
@@ -179,39 +190,42 @@ export default function Jobs() {
             </dl>
             <div className="mt-3 flex items-center justify-between rounded-lg bg-blue-100 p-3">
               <p className="text-xs font-bold text-blue-800">
-                Tsela platform royalty ({settings.feePct}%)
+                Tsela Assist platform royalty ({inv ? inv.feePct : settings.feePct}%)
                 <span className="block font-normal text-muted">Escrow deduction on EFT release</span>
               </p>
               <p className="num font-display text-xl font-extrabold text-brand">{zar(fee, 2)}</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <Button variant="secondary" icon={Repeat}>
-              Reassign mechanic
-            </Button>
-            <Button
-              variant="danger"
-              icon={Lock}
-              disabled={frozen.includes(job.id)}
-              onClick={() => setFrozen((f) => [...f, job.id])}
-            >
-              {frozen.includes(job.id) ? 'Escrow frozen' : 'Freeze escrow'}
-            </Button>
-          </div>
-          <Button
-            className="h-12"
-            disabled={settled.includes(job.id)}
-            onClick={() => setSettled((s) => [...s, job.id])}
-          >
-            {settled.includes(job.id) ? 'Settled via EFT' : 'Force fleet sign-off & settle EFT'}
-          </Button>
+          <p className="rounded-xl bg-tint p-3 text-xs text-muted">
+              {inv
+                ? 'Payouts are released from Payments once the fleet approves this invoice.'
+                : 'The mechanic has not invoiced this job yet.'}
+            </p>
         </Card>
         ) : (
           <Card className="h-fit text-sm text-muted">Select a job to inspect it. Nothing has been reported yet.</Card>
         )}
       </div>
     </>
+  )
+}
+
+function Photos({ title, urls }: { title: string; urls: string[] }) {
+  if (!urls.length) return null
+  return (
+    <div>
+      <p className="mb-1 text-[11px] font-bold uppercase text-brand">
+        {title} ({urls.length})
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {urls.map((u) => (
+          <a key={u} href={u} target="_blank" rel="noopener noreferrer">
+            <img src={u} alt={title} className="h-20 w-20 rounded-lg border border-line object-cover" />
+          </a>
+        ))}
+      </div>
+    </div>
   )
 }
 

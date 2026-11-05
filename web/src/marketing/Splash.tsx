@@ -59,7 +59,7 @@ export default function Splash() {
   return (
     <div
       role="status"
-      aria-label="Loading Tsela"
+      aria-label="Loading Tsela Assist"
       className="fixed inset-0 z-[100] flex flex-col bg-deep px-4 transition-opacity ease-out"
       style={{ opacity: phase === 'fade' ? 0 : 1, transitionDuration: `${FADE_MS}ms` }}
     >

@@ -1,4 +1,4 @@
-// Demo data for the live walkthrough: one fleet (Brave Logistics) and two repairers (Trojan, Apex). Jobs, invoices and payouts start empty. Replace with API calls later.
+// Types and empty defaults for the owner dashboard. All real data comes from Firestore (see lib/live.tsx).
 import type { Tone } from '../components/ui'
 
 export const GMV_MONTH = 0
@@ -19,7 +19,12 @@ export type Job = {
   van: string
   status: string
   statusTone: Tone
+  /** Photos for the job: from the driver's report, then the mechanic's before / after shots */
+  photos?: { driver: string[]; before: string[]; after: string[] }
+  /** Gross including VAT */
   gross: number
+  /** Real amounts from the mechanic's invoice, once one exists */
+  invoice?: { number: string; subtotal: number; vat: number; total: number; fee: number; net: number; feePct: number; vatPct: number }
 }
 
 export const jobs: Job[] = []
@@ -39,6 +44,7 @@ export const LOCATION_PENDING: MechanicLocation = {
 }
 
 export type Mechanic = {
+  id?: string
   initials: string
   name: string
   base: string
@@ -54,12 +60,10 @@ export type Mechanic = {
   note?: string
 }
 
-export const mechanics: Mechanic[] = [
-  { initials: 'TM', name: 'Trojan Mechanics', base: 'Base to be confirmed', location: LOCATION_PENDING, cipc: 'Pending', vans: 1, radius: '50km', rating: null, rigs: 0, badges: [], bank: 'Bank details pending', state: 'Active' },
-  { initials: 'AM', name: 'Apex Mechanics', base: 'Base to be confirmed', location: LOCATION_PENDING, cipc: 'Pending', vans: 1, radius: '50km', rating: null, rigs: 0, badges: [], bank: 'Bank details pending', state: 'Active' },
-]
+export const mechanics: Mechanic[] = []
 
 export type Fleet = {
+  id?: string
   name: string
   contact: string
   rigs: number
@@ -69,9 +73,7 @@ export type Fleet = {
   credit: string
 }
 
-export const fleets: Fleet[] = [
-  { name: 'Brave Logistics', contact: 'Fleet manager', rigs: 1, drivers: 1, plan: 'Fleet SaaS Pro', state: 'Active', credit: 'Not set' },
-]
+export const fleets: Fleet[] = []
 
 // Fleets are opened by name in the URL, e.g. /admin/fleets/translogix-logistics
 export const fleetSlug = (name: string) =>
@@ -89,39 +91,21 @@ export type MechanicProfile = {
   services: string[]
 }
 
-// Sample partner details. All numbers are placeholders.
-export const mechanicProfiles: Record<string, MechanicProfile> = {
-  'Trojan Mechanics': { contact: 'Dispatch', phone: '+27 00 000 0000', email: 'dispatch@trojanmechanics.demo', vatNo: 'Pending', since: '03 Nov 2026', services: ['Puncture repair', 'Blowout / tyre fitting'] },
-  'Apex Mechanics': { contact: 'Dispatch', phone: '+27 00 000 0000', email: 'dispatch@apexmechanics.demo', vatNo: 'Pending', since: '03 Nov 2026', services: ['Puncture repair', 'Blowout / tyre fitting'] },
-}
+export const mechanicProfiles: Record<string, MechanicProfile> = {}
 
 export type MechanicVan = { unit: string; technician: string; state: 'Available' | 'On a job' | 'Offline' }
 
-// Sample vans: a mechanic's real count is `vans` on its record.
-export const mechanicVans: Record<string, MechanicVan[]> = {
-  'Trojan Mechanics': [{ unit: 'Van #TM-01', technician: 'Technician', state: 'Available' }],
-  'Apex Mechanics': [{ unit: 'Van #AM-01', technician: 'Technician', state: 'Available' }],
-}
+export const mechanicVans: Record<string, MechanicVan[]> = {}
 
-const mechanicDocKinds: [string, string][] = [
-  ['CIPC registration certificate', 'cipc-registration.pdf'],
-  ['SARS VAT registration', 'sars-vat.pdf'],
-  ['SABS technician accreditation', 'sabs-accreditation.pdf'],
-  ['Public & roadside liability cover', 'liability-cover.pdf'],
-  ['Technician ID copies', 'technician-ids.pdf'],
-  ['Bank confirmation letter', 'bank-confirmation.pdf'],
+// The ids are the Firestore document ids under orgs/{id}/documents and must match app/src/app/documents.tsx.
+export const mechanicDocKinds: DocKind[] = [
+  { id: 'cipc', name: 'CIPC company registration' },
+  { id: 'vat', name: 'SARS VAT registration letter' },
+  { id: 'sabs', name: 'SABS truck repair certificate' },
+  { id: 'insurance', name: 'Public & roadside liability insurance' },
+  { id: 'technician-ids', name: 'Technician ID copies' },
+  { id: 'bank-letter', name: 'Bank confirmation letter' },
 ]
-
-// Sample documents: their status follows the partner's account state.
-export function mechanicDocs(state: string): FleetDoc[] {
-  return mechanicDocKinds.map(([name, file], i) => {
-    const uploaded = `${String(5 + i * 2).padStart(2, '0')} ${state === 'Pending' ? 'Oct' : 'Feb'} 2026`
-    const size = `${140 + i * 70} KB`
-    if (state === 'Pending' && (i === 2 || i === 5)) return { name, file, uploaded, size, state: 'Pending review' }
-    if ((state === 'Sanctioned' || state === 'Suspended') && i === 2) return { name, file, uploaded, size, state: 'Rejected' }
-    return { name, file, uploaded, size, state: 'Verified' }
-  })
-}
 
 export const mechanicSlug = (name: string) => fleetSlug(name)
 
@@ -134,10 +118,9 @@ export type FleetProfile = {
   since: string
 }
 
-// Sample company details. All numbers and addresses are placeholders.
-export const fleetProfiles: Record<string, FleetProfile> = {
-  'Brave Logistics': { regNo: 'Pending', vatNo: 'Pending', address: 'Address to be confirmed', phone: '+27 00 000 0000', email: 'manager@bravelogistics.demo', since: '03 Nov 2026' },
-}
+export const fleetProfiles: Record<string, FleetProfile> = {}
+
+export type DocKind = { id: string; name: string }
 
 export type FleetDoc = {
   name: string
@@ -147,28 +130,14 @@ export type FleetDoc = {
   state: 'Verified' | 'Pending review' | 'Rejected' | 'Not uploaded'
 }
 
-const docKinds: [string, string][] = [
-  ['CIPC registration certificate', 'cipc-registration.pdf'],
-  ['SARS tax clearance certificate', 'sars-tax-clearance.pdf'],
-  ['VAT registration', 'vat-registration.pdf'],
-  ['Proof of business address', 'proof-of-address.pdf'],
-  ['Director ID copy', 'director-id.pdf'],
-  ['Fleet vehicle list', 'fleet-vehicle-list.xlsx'],
+export const fleetDocKinds: DocKind[] = [
+  { id: 'cipc', name: 'CIPC company registration' },
+  { id: 'tax-clearance', name: 'SARS tax clearance certificate' },
+  { id: 'vat', name: 'VAT registration' },
+  { id: 'address', name: 'Proof of business address' },
+  { id: 'director-id', name: 'Director ID copy' },
+  { id: 'vehicle-list', name: 'Fleet vehicle list' },
 ]
-
-// Sample documents: their status follows the company's account state.
-export function fleetDocs(state: string): FleetDoc[] {
-  return docKinds.map(([name, file], i) => {
-    const uploaded = `${String(3 + i * 2).padStart(2, '0')} ${state === 'Pending KYC' ? 'Oct' : 'Mar'} 2026`
-    const size = `${120 + i * 85} KB`
-    if (state === 'Pending KYC') {
-      if (i === 2) return { name, file: '', uploaded: '—', size: '—', state: 'Not uploaded' }
-      return { name, file, uploaded, size, state: i < 2 ? 'Pending review' : 'Verified' }
-    }
-    if (state === 'Suspended' && i === 1) return { name, file, uploaded, size, state: 'Rejected' }
-    return { name, file, uploaded, size, state: 'Verified' }
-  })
-}
 
 export type Driver = {
   name: string
@@ -178,10 +147,7 @@ export type Driver = {
   state: 'Validated' | 'Pending' | 'Suspended'
 }
 
-// Sample rows only: a fleet's real counts are on the Fleet record (rigs, drivers).
-export const drivers: Driver[] = [
-  { name: 'Brave Driver', prdp: 'PrDP pending', fleet: 'Brave Logistics', rig: 'BR 001-GP', state: 'Validated' },
-]
+export const drivers: Driver[] = []
 
 export type Truck = {
   plate: string
@@ -192,10 +158,7 @@ export type Truck = {
   state: 'Available' | 'On a job' | 'Out of service'
 }
 
-// Sample rows only: a fleet's real count is the `rigs` number on its Fleet record.
-export const trucks: Truck[] = [
-  { plate: 'BR 001-GP', vehicle: 'Volvo FH16 6×4', kind: 'Truck tractor', fleet: 'Brave Logistics', driver: 'Brave Driver', state: 'Available' },
-]
+export const trucks: Truck[] = []
 
 export type Payout = {
   job: string
@@ -206,10 +169,14 @@ export type Payout = {
   rig: string
   gross: number
   signed: boolean
+  /** Real amounts and payout status, when the data is live */
+  subtotal?: number
+  vat?: number
+  fee?: number
+  net?: number
+  settlementId?: string
+  settled?: boolean
 }
 
 export const payouts: Payout[] = []
 
-export const subscriptions = [
-  { fleet: 'Brave Logistics', plan: 'Fleet SaaS Pro', rigs: 1, monthly: 0, renews: '—', state: 'Trial' },
-]

@@ -14,7 +14,7 @@ import {
 import { useState } from 'react'
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { cx } from '../components/ui'
-import { isSignedIn, signOut } from './auth'
+import { signOut, useAuth } from './auth'
 
 const groups = [
   {
@@ -43,8 +43,10 @@ const groups = [
 export default function AdminLayout() {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
+  const { ready, signedIn } = useAuth()
 
-  if (!isSignedIn()) return <Navigate to="/admin/login" replace />
+  if (!ready) return <div className="flex min-h-screen items-center justify-center text-sm text-muted">Loading…</div>
+  if (!signedIn) return <Navigate to="/admin/login" replace />
 
   const nav = (
     <nav aria-label="Admin" className="flex flex-col gap-6 px-4 py-5">
@@ -144,8 +146,7 @@ export default function AdminLayout() {
               aria-label="Sign out"
               title="Sign out"
               onClick={() => {
-                signOut()
-                navigate('/admin/login')
+                void signOut().then(() => navigate('/admin/login'))
               }}
               className="flex h-9 w-9 items-center justify-center rounded-full bg-navy text-white"
             >
@@ -166,7 +167,7 @@ function Brand() {
     <div className="flex items-center gap-3 px-6 pt-6">
       <img src="/logo.png" alt="" className="h-10 w-auto" />
       <div className="leading-tight">
-        <p className="font-display text-lg font-extrabold">TSELA</p>
+        <p className="font-display text-lg font-extrabold">TSELA ASSIST</p>
         <p className="text-[11px] font-bold tracking-wide text-brand">COMMAND CONSOLE</p>
       </div>
     </div>

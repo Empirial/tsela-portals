@@ -1,4 +1,7 @@
+import { doc, onSnapshot, setDoc } from 'firebase/firestore'
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useAuth } from '../admin/auth'
+import { db } from './firebase'
 
 export type Corridor = {
   id: string
@@ -9,7 +12,7 @@ export type Corridor = {
 }
 
 export type Settings = {
-  /** Tsela's cut of every job, as a percentage (product spec: owner-configurable) */
+  /** Tsela Assist's cut of every job, as a percentage (product spec: owner-configurable) */
   feePct: number
   vatPct: number
   corridors: Corridor[]
@@ -49,6 +52,18 @@ const SettingsContext = createContext<Ctx | null>(null)
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<Settings>(load)
+  const { signedIn } = useAuth()
+
+  // With the live backend the fee, VAT and coverage areas live in Firestore: the Cloud Functions read the same
+  // document when pricing invoices, so a change here applies to every new invoice.
+  useEffect(() => {
+    if (!signedIn) return
+    return onSnapshot(
+      doc(db, 'settings', 'platform'),
+      (snap) => snap.exists() && setSettings({ ...defaultSettings, ...(snap.data() as Partial<Settings>) }),
+      () => {},
+    )
+  }, [signedIn])
 
   useEffect(() => {
     try {
@@ -61,8 +76,14 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const value = useMemo<Ctx>(
     () => ({
       settings,
-      save: setSettings,
-      reset: () => setSettings(defaultSettings),
+      save: (s: Settings) => {
+        setSettings(s)
+        setDoc(doc(db, 'settings', 'platform'), s, { merge: true }).catch((e) => console.error('Could not save settings', e))
+      },
+      reset: () => {
+        setSettings(defaultSettings)
+        setDoc(doc(db, 'settings', 'platform'), defaultSettings, { merge: true }).catch((e) => console.error('Could not save settings', e))
+      },
     }),
     [settings],
   )

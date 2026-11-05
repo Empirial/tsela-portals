@@ -21,7 +21,7 @@ import Splash from './Splash'
 const WEB_APP_URL = 'https://tsela.expo.app'
 
 const hero = [
-  { icon: BadgeCheck, text: 'Every mechanic verified by Tsela before going live' },
+  { icon: BadgeCheck, text: 'Every mechanic verified by Tsela Assist before going live' },
   { icon: MapPin, text: 'Matched by distance, so the nearest help responds first' },
   { icon: ShieldCheck, text: 'Itemised VAT invoices, paid in the app' },
 ]
@@ -84,11 +84,11 @@ const stats = [
 ]
 
 const faqs = [
-  { q: 'How does Tsela work?', a: 'Tsela is a mobile app and website that lets fleet companies call the nearest mobile truck mechanic when a truck has a puncture or breakdown, much like Uber matches a rider with a driver.' },
+  { q: 'How does Tsela Assist work?', a: 'Tsela Assist is a mobile app and website that lets fleet companies call the nearest mobile truck mechanic when a truck has a puncture or breakdown, much like Uber matches a rider with a driver.' },
   { q: 'Who can report a breakdown?', a: 'Drivers report from the app. The report goes to the fleet manager, who confirms it and chooses the mechanic.' },
-  { q: 'How do mechanics get on the platform?', a: 'Mechanics sign up with their business details, service area and the tyre services they offer. Tsela verifies each one before they can receive call-outs.' },
-  { q: 'How are jobs paid for?', a: 'The fleet pays through the app against an itemised invoice with VAT. Tsela takes a platform fee from each job and the mechanic receives the rest.' },
-  { q: 'When can I use it?', a: 'Tsela is in development. Leave your email and we will tell you when it opens.' },
+  { q: 'How do mechanics get on the platform?', a: 'Mechanics sign up with their business details, service area and the tyre services they offer. Tsela Assist verifies each one before they can receive call-outs.' },
+  { q: 'How are jobs paid for?', a: 'The fleet pays through the app against an itemised invoice with VAT. Tsela Assist takes a platform fee from each job and the mechanic receives the rest.' },
+  { q: 'When can I use it?', a: 'Tsela Assist is in development. Leave your email and we will tell you when it opens.' },
 ]
 
 const nav = [
@@ -138,7 +138,7 @@ export default function Home() {
           <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4">
             <a href="#top" className="flex items-center gap-2">
               <img src="/logo.png" alt="" className="h-11 w-auto rounded-xl bg-white p-1" />
-              <span className="font-display text-xl font-extrabold">Tsela</span>
+              <span className="font-display text-xl font-extrabold">Tsela Assist</span>
             </a>
             <nav aria-label="Main" className="hidden items-center gap-8 md:flex">
               {nav.map(([l, h]) => (
@@ -178,7 +178,7 @@ export default function Home() {
         <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center px-4 py-16 text-center">
           <img
             src="/logo.png"
-            alt="Tsela"
+            alt="Tsela Assist"
             className="logo-bounce mb-6 h-24 w-24 rounded-3xl bg-white p-2 shadow-2xl sm:h-28 sm:w-28"
           />
           <h1 className="max-w-2xl font-display text-4xl leading-tight font-extrabold tracking-tight sm:text-6xl">
@@ -187,7 +187,7 @@ export default function Home() {
             dispatched in minutes.
           </h1>
           <p className="mt-5 max-w-lg text-lg text-white/80">
-            A truck stops. Tsela sends the nearest verified mechanic.
+            A truck stops. Tsela Assist sends the nearest verified mechanic.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <a
@@ -202,6 +202,12 @@ export default function Home() {
             >
               Open the web app
             </a>
+            <Link
+              to="/download"
+              className="inline-flex h-12 items-center gap-2 rounded-md border border-white/70 px-6 text-sm font-semibold hover:bg-white hover:text-navy"
+            >
+              Download the app
+            </Link>
           </div>
         </div>
 
@@ -230,11 +236,11 @@ export default function Home() {
             <div>
               <p className="font-display text-sm font-bold tracking-widest text-lime">LOGISTICS, FIXED</p>
               <h2 className="mt-2 font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
-                Tsela, mobile truck repair for fleets
+                Tsela Assist, mobile truck repair for fleets
               </h2>
             </div>
             <p className="text-white/70">
-              When a truck has a puncture or breakdown, every minute off the road costs money. Tsela connects
+              When a truck has a puncture or breakdown, every minute off the road costs money. Tsela Assist connects
               fleet companies with the nearest verified mobile mechanic, much like Uber matches a rider with a
               driver. Drivers report in one tap, managers confirm and choose the mechanic, and the mechanic
               invoices from the roadside. Everyone sees the same job from report to payment.
@@ -252,7 +258,7 @@ export default function Home() {
             className="relative mx-auto max-w-6xl px-4"
             role="group"
             aria-roledescription="carousel"
-            aria-label="The three Tsela portals"
+            aria-label="The three Tsela Assist portals"
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             onFocus={() => setHover(true)}
@@ -362,7 +368,7 @@ export default function Home() {
         </section>
 
         {/* Stats */}
-        <section aria-label="Tsela in numbers" className="mx-auto max-w-6xl px-4 pb-24">
+        <section aria-label="Tsela Assist in numbers" className="mx-auto max-w-6xl px-4 pb-24">
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((s) => (
               <div key={s.label} className="text-center">
@@ -429,13 +435,13 @@ export default function Home() {
             aria-hidden
             className="pointer-events-none absolute right-0 bottom-24 font-display text-[7rem] leading-none font-extrabold text-white/[0.04] select-none sm:text-[12rem]"
           >
-            TSELA
+            TSELA ASSIST
           </span>
           <div className="relative mx-auto grid max-w-6xl gap-10 px-4 lg:grid-cols-[1fr_20rem]">
             <div>
               <p className="font-display text-sm font-bold tracking-widest text-lime">GET EARLY ACCESS</p>
               <h2 className="mt-2 font-display text-3xl font-extrabold tracking-tight sm:text-4xl">Be first to know</h2>
-              <p className="mt-2 text-white/70">Tell us who you are and we will email you when Tsela opens.</p>
+              <p className="mt-2 text-white/70">Tell us who you are and we will email you when Tsela Assist opens.</p>
               {state === 'done' ? (
                 <p role="status" className="mt-8 rounded-md bg-white/10 p-4 font-semibold">
                   Thanks! We’ll be in touch at {email}.
@@ -513,17 +519,22 @@ export default function Home() {
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 text-sm text-white/60">
           <a href="#top" className="flex items-center gap-2 text-white">
             <img src="/logo.png" alt="" className="h-8 w-auto rounded-lg bg-white p-0.5" />
-            <span className="font-display text-base font-extrabold">Tsela</span>
+            <span className="font-display text-base font-extrabold">Tsela Assist</span>
           </a>
           <p>
-            © Tsela. All rights reserved.
+            © Tsela Assist. All rights reserved.
             <span className="mt-1 block text-xs text-white/50 sm:mt-0 sm:ml-3 sm:inline">
               Developed by Lufuno Mphela
             </span>
           </p>
-          <Link to="/admin/login" className="font-semibold text-white hover:text-lime">
-            Owner sign in
-          </Link>
+          <div className="flex gap-6">
+            <Link to="/download" className="font-semibold text-white hover:text-lime">
+              Download app
+            </Link>
+            <Link to="/admin/login" className="font-semibold text-white hover:text-lime">
+              Owner sign in
+            </Link>
+          </div>
         </div>
       </footer>
     </div>

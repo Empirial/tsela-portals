@@ -2,25 +2,36 @@ import { Lock, Mail } from 'lucide-react'
 import { useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui'
-import { isSignedIn, signIn } from './auth'
+import { signInOwner, useAuth } from './auth'
 
 export default function Login() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [touched, setTouched] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const { signedIn } = useAuth()
 
-  if (isSignedIn()) return <Navigate to="/admin" replace />
+  if (signedIn) return <Navigate to="/admin" replace />
 
   const emailOk = /\S+@\S+\.\S+/.test(email)
   const passOk = password.length >= 6
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setTouched(true)
-    if (!emailOk || !passOk) return
-    signIn()
-    navigate('/admin')
+    if (!emailOk || !passOk || busy) return
+    setBusy(true)
+    setError('')
+    try {
+      await signInOwner(email, password)
+      navigate('/admin')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not sign in.')
+    } finally {
+      setBusy(false)
+    }
   }
 
   return (
@@ -35,7 +46,7 @@ export default function Login() {
         <div className="mb-6 flex items-center gap-3">
           <img src="/logo.png" alt="" className="h-12 w-auto" />
           <div className="leading-tight">
-            <p className="font-display text-xl font-extrabold">TSELA</p>
+            <p className="font-display text-xl font-extrabold">TSELA ASSIST</p>
             <p className="text-[11px] font-bold tracking-wide text-brand">COMMAND CONSOLE</p>
           </div>
         </div>
@@ -78,12 +89,18 @@ export default function Login() {
           <p className="mt-1 text-xs font-semibold text-danger">Password must be at least 6 characters.</p>
         ) : null}
 
-        <Button type="submit" className="mt-6 h-12 w-full">
-          Sign in
+        {error ? (
+          <p role="alert" className="mt-4 text-sm font-semibold text-danger">
+            {error}
+          </p>
+        ) : null}
+
+        <Button type="submit" disabled={busy} className="mt-6 h-12 w-full">
+          {busy ? 'Signing in…' : 'Sign in'}
         </Button>
         <p className="mt-6 text-center text-xs text-muted">
           <Link to="/" className="font-semibold text-brand hover:underline">
-            ← Back to the Tsela website
+            ← Back to the Tsela Assist website
           </Link>
         </p>
       </form>

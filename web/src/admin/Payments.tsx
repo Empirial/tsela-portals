@@ -4,24 +4,37 @@ import { useSearchParams } from 'react-router-dom'
 import { Badge, Button, Card, PageHeader, Stat, Table, Tabs } from '../components/ui'
 import { zar } from '../lib/format'
 import { useSettings } from '../lib/settings'
-import { payouts, subscriptions } from './data'
+import { useLive } from '../lib/live'
 
 type Tab = 'ledger' | 'subs'
 
 
 export default function Payments() {
   const { settings } = useSettings()
+  const { payouts, subscriptions, releasePayout } = useLive()
   const [params, setParams] = useSearchParams()
   const tab: Tab = params.get('tab') === 'subs' ? 'subs' : 'ledger'
   const [released, setReleased] = useState<string[]>([])
-  const [batch, setBatch] = useState(false)
 
+  // Live rows carry the real invoice amounts; sample rows fall back to the percentages in Settings.
   const rows = payouts.map((p) => {
-    const fee = (p.gross * settings.feePct) / 100
-    const vat = p.gross - p.gross / (1 + settings.vatPct / 100)
-    return { ...p, fee, vat, net: p.gross - fee }
+    const fee = p.fee ?? (p.gross * settings.feePct) / 100
+    const vat = p.vat ?? p.gross - p.gross / (1 + settings.vatPct / 100)
+    return { ...p, fee, vat, net: p.net ?? p.gross - fee }
   })
-  const ready = rows.filter((r) => r.signed && !released.includes(r.job))
+  const isDone = (r: (typeof rows)[number]) => !!r.settled || released.includes(r.job)
+  const ready = rows.filter((r) => r.signed && !isDone(r))
+  const [releaseError, setReleaseError] = useState('')
+  const release = async (list: typeof rows) => {
+    setReleaseError('')
+    setReleased((x) => [...x, ...list.map((r) => r.job)])
+    try {
+      await releasePayout(list.flatMap((r) => (r.settlementId ? [r.settlementId] : [])))
+    } catch (e) {
+      setReleased((x) => x.filter((j) => !list.some((r) => r.job === j)))
+      setReleaseError(e instanceof Error ? e.message : 'Could not release the payout. Try again.')
+    }
+  }
   const readyTotal = ready.reduce((a, r) => a + r.net, 0)
 
   return (
@@ -73,26 +86,28 @@ export default function Payments() {
                 </p>
               </div>
               <Button
-                disabled={ready.length === 0 || batch}
-                onClick={() => {
-                  setReleased((r) => [...r, ...ready.map((x) => x.job)])
-                  setBatch(true)
-                }}
+                disabled={ready.length === 0}
+                onClick={() => void release(ready)}
               >
-                {batch && ready.length === 0 ? 'Batch released' : 'Release batch payouts'}
+                {ready.length === 0 && released.length > 0 ? 'Batch released' : 'Release batch payouts'}
               </Button>
             </div>
           </Card>
+          {releaseError ? (
+            <p role="alert" className="text-sm font-semibold text-danger">
+              {releaseError}
+            </p>
+          ) : null}
 
           <Card className="p-0">
             <div className="border-b border-line p-5">
               <h2 className="font-display text-lg font-extrabold">Verified job breakdown &amp; commission clearing</h2>
               <p className="text-sm text-muted">
-                Every job shows the {settings.feePct}% Tsela fee deduction and the {settings.vatPct}% VAT split.
+                Every job shows the {settings.feePct}% Tsela Assist fee deduction and the {settings.vatPct}% VAT split.
               </p>
             </div>
             <Table
-              head={['Job', 'Mechanic', 'Fleet', 'Gross invoiced', `${settings.feePct}% Tsela fee`, `VAT (${settings.vatPct}%)`, 'Net payout owed', 'Driver ePOD', 'Settlement']}
+              head={['Job', 'Mechanic', 'Fleet', 'Gross invoiced', `${settings.feePct}% Tsela Assist fee`, `VAT (${settings.vatPct}%)`, 'Net payout owed', 'Driver ePOD', 'Settlement']}
             >
               {rows.length === 0 ? (
                 <tr>
@@ -102,7 +117,7 @@ export default function Payments() {
                 </tr>
               ) : null}
               {rows.map((r) => {
-                const done = released.includes(r.job)
+                const done = isDone(r)
                 return (
                   <tr key={r.job} className="align-top">
                     <td className="num px-3 py-4">
@@ -128,7 +143,7 @@ export default function Payments() {
                       {done ? (
                         <Badge tone="neutral">Settled</Badge>
                       ) : r.signed ? (
-                        <Button className="h-8 px-3 text-xs" onClick={() => setReleased((x) => [...x, r.job])}>
+                        <Button className="h-8 px-3 text-xs" onClick={() => void release([r])}>
                           Release pay
                         </Button>
                       ) : (

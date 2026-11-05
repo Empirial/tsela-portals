@@ -4,14 +4,12 @@ import { Link, useParams } from 'react-router-dom'
 import { Badge, Button, Card, PageHeader, Stat, Table, Tabs, type Tone } from '../components/ui'
 import { zar } from '../lib/format'
 import { useOverrides } from '../lib/overrides'
+import { useLive } from '../lib/live'
+import { useOrgDocs } from '../lib/orgDocs'
 import {
-  jobs,
-  mechanicDocs,
-  mechanicProfiles,
-  mechanics,
+  mechanicDocKinds,
   mechanicSlug,
   mechanicVans,
-  type FleetDoc,
   type Mechanic,
   type MechanicVan,
 } from './data'
@@ -28,10 +26,11 @@ const vanTone: Record<MechanicVan['state'], Tone> = {
 
 export default function MechanicDetail() {
   const { id } = useParams()
+  const { jobs, mechanicProfiles, mechanics } = useLive()
   const mechanic = mechanics.find((m) => mechanicSlug(m.name) === id)
+  const { docs, review, openDoc } = useOrgDocs(mechanic?.id, mechanicDocKinds)
   const [tab, setTab] = useState<Tab>('documents')
   const [stateMap, setState] = useOverrides('tsela.mechanics.state')
-  const [docState, setDocState] = useOverrides('tsela.mechanicdocs.state')
 
   if (!mechanic) {
     return (
@@ -48,10 +47,6 @@ export default function MechanicDetail() {
   const s = (stateMap[mechanic.name] as Mechanic['state'] | undefined) ?? mechanic.state
   const profile = mechanicProfiles[mechanic.name]
   const vans = mechanicVans[mechanic.name] ?? []
-  const docs = mechanicDocs(s).map((d) => ({
-    ...d,
-    state: (docState[`${mechanic.name}|${d.name}`] as FleetDoc['state'] | undefined) ?? d.state,
-  }))
   const docsToReview = docs.filter((d) => d.state === 'Pending review').length
   // Jobs are matched on the business's first word, e.g. "Apex" in "Apex 24/7 Mobile Tyres".
   const key = mechanic.name.split(' ')[0].toLowerCase()
@@ -115,7 +110,7 @@ export default function MechanicDetail() {
                   ['Primary contact', profile.contact],
                   ['Phone', profile.phone],
                   ['Email', profile.email],
-                  ['Joined Tsela', profile.since],
+                  ['Joined Tsela Assist', profile.since],
                 ]
               : []),
             ['Base station', mechanic.base],
@@ -160,39 +155,49 @@ export default function MechanicDetail() {
             </p>
           ) : null}
           <Table head={['Document', 'File', 'Uploaded', 'Status']}>
-            {docs.map((d) => {
-              const k = `${mechanic.name}|${d.name}`
-              return (
-                <tr key={d.name}>
-                  <td className="px-3 py-4">
-                    <span className="flex items-center gap-2 font-semibold">
-                      <FileText size={16} className="text-muted" aria-hidden /> {d.name}
-                    </span>
-                  </td>
-                  <td className="px-3 py-4 text-xs text-muted">{d.file ? `${d.file} • ${d.size}` : '—'}</td>
-                  <td className="num px-3 py-4 text-xs text-muted">{d.uploaded}</td>
-                  <td className="px-3 py-4">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge tone={docTone[d.state]}>{d.state}</Badge>
-                      {d.state === 'Pending review' ? (
-                        <>
-                          <Button className="h-8 px-3 text-xs" onClick={() => setDocState(k, 'Verified')}>
-                            Approve
-                          </Button>
-                          <Button variant="danger" className="h-8 px-3 text-xs" onClick={() => setDocState(k, 'Rejected')}>
-                            Reject
-                          </Button>
-                        </>
-                      ) : null}
-                    </div>
-                  </td>
-                </tr>
-              )
-            })}
+            {docs.map((d) => (
+              <tr key={d.id}>
+                <td className="px-3 py-4">
+                  <span className="flex items-center gap-2 font-semibold">
+                    <FileText size={16} className="text-muted" aria-hidden /> {d.name}
+                  </span>
+                </td>
+                <td className="px-3 py-4 text-xs">
+                  {d.state === 'Not uploaded' ? (
+                    <span className="text-muted">-</span>
+                  ) : (
+                    <button className="font-semibold text-brand hover:underline" onClick={() => void openDoc(d.id)}>
+                      View file
+                    </button>
+                  )}
+                </td>
+                <td className="num px-3 py-4 text-xs text-muted">{d.uploaded}</td>
+                <td className="px-3 py-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge tone={docTone[d.state]}>{d.state}</Badge>
+                    {d.state === 'Pending review' ? (
+                      <>
+                        <Button className="h-8 px-3 text-xs" onClick={() => void review(d.id, 'verified')}>
+                          Approve
+                        </Button>
+                        <Button
+                          variant="danger"
+                          className="h-8 px-3 text-xs"
+                          onClick={() => {
+                            const reason = window.prompt('Why is this document rejected? The company will see this.')
+                            if (reason) void review(d.id, 'rejected', reason)
+                          }}
+                        >
+                          Reject
+                        </Button>
+                      </>
+                    ) : null}
+                    {d.state === 'Rejected' && d.reason ? <span className="text-xs text-muted">{d.reason}</span> : null}
+                  </div>
+                </td>
+              </tr>
+            ))}
           </Table>
-          <p className="border-t border-line px-4 py-3 text-xs text-muted">
-            Sample documents. Opening the files will work once document storage is connected.
-          </p>
         </Card>
       ) : null}
 

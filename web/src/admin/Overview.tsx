@@ -1,16 +1,15 @@
-import { Banknote, Landmark, Megaphone, Radar, ShieldAlert, ShieldCheck, Users } from 'lucide-react'
-import { useState } from 'react'
+import { Banknote, Landmark, Radar, ShieldAlert, ShieldCheck, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { Badge, Button, Card, PageHeader, Stat } from '../components/ui'
+import { Badge, Card, PageHeader, Stat } from '../components/ui'
 import { zar } from '../lib/format'
 import { useSettings } from '../lib/settings'
-import { fleets, GMV_MONTH, jobs, mechanics } from './data'
+import { useLive } from '../lib/live'
 
 export default function Overview() {
   const { settings } = useSettings()
-  const [broadcast, setBroadcast] = useState(false)
+  const { fleets, jobs, mechanics, gmv } = useLive()
 
-  const take = (GMV_MONTH * settings.feePct) / 100
+  const take = (gmv * settings.feePct) / 100
   const active = jobs.filter((j) => j.status !== 'Bank cleared').length
   const cleared = jobs.length - active
   const driverCount = fleets.reduce((a, f) => a + f.drivers, 0)
@@ -27,7 +26,7 @@ export default function Overview() {
       />
 
       <section aria-label="Key figures" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Stat label="Gross job volume (GMV)" value={zar(GMV_MONTH)} sub="No jobs paid yet" icon={Banknote} />
+        <Stat label="Gross job volume (GMV)" value={zar(gmv)} sub={gmv ? 'Invoices approved by fleets' : 'No jobs paid yet'} icon={Banknote} />
         <Stat
           label={`Platform take (${settings.feePct}%)`}
           value={zar(take)}
@@ -60,7 +59,7 @@ export default function Overview() {
                   <Badge tone={j.statusTone}>{j.status}</Badge>
                 </div>
                 <p className="text-sm text-muted">
-                  {j.highway.split(' ')[0]} {j.place} • {j.mechanic}
+                  {j.highway ? j.highway.split(' ')[0] + ' ' : ''}{j.place} • {j.mechanic}
                 </p>
                 <p className="num mt-1 text-xs font-semibold text-brand">{j.tyre.split(' ').slice(0, 2).join(' ')}</p>
               </li>
@@ -105,17 +104,6 @@ export default function Overview() {
             >
               Open jobs
             </Link>
-          </div>
-          <div className="mt-auto pt-4">
-            {broadcast ? (
-              <p role="status" className="rounded-lg bg-emerald-50 p-3 text-sm font-semibold text-emerald-700">
-                Advisory queued for all units (demo only, nothing was sent).
-              </p>
-            ) : (
-              <Button variant="dark" icon={Megaphone} className="h-12 w-full" onClick={() => setBroadcast(true)}>
-                Broadcast Highway Advisory to All Units
-              </Button>
-            )}
           </div>
         </Card>
       </div>

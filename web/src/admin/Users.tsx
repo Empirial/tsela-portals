@@ -3,7 +3,8 @@ import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Badge, Button, Card, PageHeader, Stat, Table, Tabs, type Tone } from '../components/ui'
 import { useOverrides } from '../lib/overrides'
-import { fleets, fleetSlug, mechanics, type Mechanic } from './data'
+import { useLive } from '../lib/live'
+import { fleetSlug, type Mechanic } from './data'
 
 type Filter = 'all' | 'active' | 'pending' | 'suspended'
 
@@ -55,6 +56,7 @@ const matches = (state: string, f: Filter) =>
 /* -------------------------------- Mechanics ------------------------------- */
 
 export function MechanicsPage() {
+  const { mechanics, fleets } = useLive()
   const [q, setQ] = useState('')
   const [filter, setFilter] = useState<Filter>('all')
   const [override, setOverride] = useOverrides('tsela.mechanics.state')
@@ -296,6 +298,7 @@ function Section({ title, tag, children }: { title: string; tag: string; childre
 /* ---------------------------------- Fleets --------------------------------- */
 
 export function FleetsPage() {
+  const { fleets } = useLive()
   const [q, setQ] = useState('')
   const [filter, setFilter] = useState<Filter>('all')
   const [override, set] = useOverrides('tsela.fleets.state')

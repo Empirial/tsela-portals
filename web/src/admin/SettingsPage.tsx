@@ -98,7 +98,7 @@ export default function SettingsPage() {
       <PageHeader
         eyebrow="Commercial & admin"
         title="Platform Settings"
-        sub="Platform fee percentage, and the areas where Tsela does business."
+        sub="Platform fee percentage, and the areas where Tsela Assist does business."
         actions={
           <>
             <Button
@@ -130,7 +130,7 @@ export default function SettingsPage() {
           <NumberField
             id="fee"
             label="Platform fee"
-            hint="Tsela's cut of each completed job. Shown on every invoice and payout."
+            hint="Tsela Assist's cut of each completed job. Shown on every invoice and payout."
             value={draft.feePct}
             suffix="%"
             max={30}
