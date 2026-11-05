@@ -1,3 +1,4 @@
+import { withSentryReactRouterV7Routing } from '@sentry/react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import AdminLayout from './admin/AdminLayout'
 import Jobs from './admin/Jobs'
@@ -8,15 +9,21 @@ import SettingsPage from './admin/SettingsPage'
 import FleetDetail from './admin/FleetDetail'
 import MechanicDetail from './admin/MechanicDetail'
 import { FleetsPage, MechanicsPage } from './admin/Users'
+import { LiveDataProvider } from './lib/live'
 import { SettingsProvider } from './lib/settings'
+import Download from './marketing/Download'
 import Home from './marketing/Home'
+
+const SentryRoutes = withSentryReactRouterV7Routing(Routes)
 
 export default function App() {
   return (
     <SettingsProvider>
+      <LiveDataProvider>
       <BrowserRouter>
-        <Routes>
+        <SentryRoutes>
           <Route path="/" element={<Home />} />
+          <Route path="/download" element={<Download />} />
           <Route path="/admin/login" element={<Login />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Overview />} />
@@ -31,8 +38,9 @@ export default function App() {
             <Route path="settings" element={<SettingsPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        </SentryRoutes>
       </BrowserRouter>
+      </LiveDataProvider>
     </SettingsProvider>
   )
 }
