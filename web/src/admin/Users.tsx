@@ -1,4 +1,4 @@
-﻿import { CheckCircle2, FileText, Search, ShieldAlert, X } from 'lucide-react'
+﻿import { CheckCircle2, Search, ShieldAlert, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Badge, Button, Card, PageHeader, Stat, Table, Tabs, type Tone } from '../components/ui'
@@ -92,7 +92,7 @@ export function MechanicsPage() {
               <Badge tone="red">Urgent action</Badge>
             </p>
             <p className="text-sm text-slate-700">
-              {pending} mechanic verification application{pending > 1 ? 's' : ''} awaiting SABS &amp; VAT approval.
+              {pending} mechanic verification application{pending > 1 ? 's' : ''} awaiting approval.
             </p>
           </div>
           <Button variant="dark" onClick={() => setDossier(mechanics.find((r) => state(r) === 'Pending') ?? null)}>
@@ -219,6 +219,8 @@ function Dossier({
   onClose: () => void
   onDecide: (s: Mechanic['state']) => void
 }) {
+  const { mechanicProfiles } = useLive()
+  const profile = mechanicProfiles[r.name]
   return (
     <div className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true" aria-label={`Inspection dossier for ${r.name}`}>
       <button aria-label="Close dossier" className="absolute inset-0 bg-navy/60" onClick={onClose} />
@@ -234,37 +236,30 @@ function Dossier({
           </button>
         </div>
         <div className="flex flex-col gap-4 p-5">
-          <Section title="1. CIPC & SARS VAT filing" tag="Automated match">
+          <Section title="1. Business details" tag="From sign-up">
             <p className="num text-sm">CIPC registration: {r.cipc}</p>
-            <div className="mt-2 flex gap-2">
-              <Button variant="secondary" icon={FileText} className="h-8 text-xs">
-                CIPC certificate.pdf
-              </Button>
-              <Button variant="secondary" icon={FileText} className="h-8 text-xs">
-                SARS tax clearance
-              </Button>
-            </div>
+            <p className="mt-1 text-sm">Base: {r.base}</p>
+            <p className="mt-2 text-xs text-muted">
+              Verification documents uploaded by the mechanic are listed on their detail page.
+            </p>
           </Section>
-          <Section title="2. SABS technician accreditations" tag="1 cert awaiting sign-off">
-            <p className="text-sm">Lead mechanic: SABS heavy commercial registration on file.</p>
-            <p className="text-xs text-danger">Apprentice logbook expired â€” request waiver.</p>
+          <Section title="2. Services offered" tag={`${profile?.services.length ?? 0} selected`}>
+            {profile?.services.length ? (
+              <ul className="flex flex-wrap gap-2">
+                {profile.services.map((sv) => (
+                  <li key={sv} className="rounded-full bg-white px-3 py-1 text-xs font-bold text-brand">
+                    {sv}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-muted">No services were selected at sign-up.</p>
+            )}
           </Section>
-          <Section title="3. Commercial liability & roadside indemnity" tag="Verified">
-            <p className="text-sm">Public &amp; roadside liability cover confirmed.</p>
-          </Section>
-          <Section title="4. Mobile casings stock declaration" tag="38 casings stored">
-            <div className="grid grid-cols-3 gap-2 text-center">
-              {[
-                ['315/80 R22.5', '18 in stock'],
-                ['385/65 R22.5', '12 in stock'],
-                ['12R22.5', '8 in stock'],
-              ].map(([s, n]) => (
-                <div key={s} className="num rounded-lg bg-tint p-2">
-                  <p className="font-display font-extrabold">{s}</p>
-                  <p className="text-xs text-brand">{n}</p>
-                </div>
-              ))}
-            </div>
+          <Section title="3. Contact" tag="From sign-up">
+            <p className="text-sm">{profile?.contact ?? 'Dispatch'}</p>
+            <p className="num text-sm">{profile?.phone ?? '-'}</p>
+            <p className="text-sm">{profile?.email ?? '-'}</p>
           </Section>
         </div>
         <div className="mt-auto flex flex-wrap gap-2 border-t border-line p-5">

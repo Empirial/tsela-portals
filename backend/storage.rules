@@ -1,0 +1,33 @@
+rules_version = '2';
+
+// Damage photos and mechanic documents. Files are images or PDFs under 10 MB, written by members of the
+// owning organisation and read by that organisation and the platform owner.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() { return signedIn() && request.auth.token.role == 'admin'; }
+    function inOrg(id) { return signedIn() && request.auth.token.orgId == id; }
+    function okFile() {
+      return request.resource.size < 10 * 1024 * 1024
+        && (request.resource.contentType.matches('image/.*') || request.resource.contentType == 'application/pdf');
+    }
+
+    match /reports/{fleetId}/{allPaths=**} {
+      allow read: if isAdmin() || inOrg(fleetId);
+      allow write: if inOrg(fleetId) && okFile();
+    }
+
+    // Before / after photos taken by the mechanic on site. Only that mechanic business uploads them; the fleet
+    // manager and the owner see them through the links saved on the incident.
+    match /jobphotos/{orgId}/{allPaths=**} {
+      allow read: if isAdmin() || inOrg(orgId);
+      allow write: if inOrg(orgId) && request.auth.token.role == 'repairer' && okFile();
+    }
+
+    match /documents/{orgId}/{allPaths=**} {
+      allow read: if isAdmin() || inOrg(orgId);
+      // Only the company's manager or the mechanic's dispatcher uploads documents, not drivers.
+      allow write: if inOrg(orgId) && (request.auth.token.role == 'manager' || request.auth.token.role == 'repairer') && okFile();
+    }
+  }
+}

@@ -1,5 +1,5 @@
-import { onCall } from './sentry.js'; // must stay first: initialises Sentry
-import { randomInt } from 'node:crypto';
+import { onCall, Sentry } from './sentry.js'; // must stay first: initialises Sentry
+import { createHash, randomInt } from 'node:crypto';
 import { initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { FieldValue, getFirestore, type Transaction } from 'firebase-admin/firestore';
@@ -45,8 +45,79 @@ async function requireActiveOrg(orgId: string) {
   return snap.data()!;
 }
 
-async function notify(orgId: string, title: string, body: string, role?: Role, detail = '') {
-  await db.collection('notices').add({ orgId, role: role ?? null, title, body, detail, createdAt: FieldValue.serverTimestamp() });
+// ---------------------------------------------------------------------------------------------------
+// notifications: one inbox record per person (read by the app) plus a push message to their phones
+// ---------------------------------------------------------------------------------------------------
+
+const pushDocId = (token: string) => createHash('sha256').update(token).digest('hex');
+
+type PushMessage = { to: string; title: string; body: string; sound: 'default'; channelId: 'default'; priority: 'high' };
+
+/** Sends through Expo's push service (which relays to Google's FCM). Never throws: an alert must not fail a job. */
+async function sendPush(tokens: string[], title: string, body: string) {
+  if (!tokens.length) return;
+  try {
+    for (let i = 0; i < tokens.length; i += 100) {
+      const chunk = tokens.slice(i, i + 100);
+      const messages: PushMessage[] = chunk.map((to) => ({ to, title, body, sound: 'default', channelId: 'default', priority: 'high' }));
+      const res = await fetch('https://exp.host/--/api/v2/push/send', {
+        method: 'POST',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(messages),
+        signal: AbortSignal.timeout(5000),
+      });
+      const json = (await res.json()) as { data?: { status: string; details?: { error?: string } }[] };
+      // Forget phones that have uninstalled the app or turned notifications off for good.
+      await Promise.all(
+        (json.data ?? []).map((t, n) =>
+          t.status === 'error' && t.details?.error === 'DeviceNotRegistered' ? db.doc(`pushTokens/${pushDocId(chunk[n])}`).delete() : null,
+        ),
+      );
+    }
+  } catch (e) {
+    Sentry.captureException(e);
+  }
+}
+
+async function tokensForUids(uids: string[]): Promise<string[]> {
+  const out: string[] = [];
+  for (let i = 0; i < uids.length; i += 30) {
+    const snap = await db.collection('pushTokens').where('uid', 'in', uids.slice(i, i + 30)).get();
+    snap.docs.forEach((d) => out.push(d.get('token') as string));
+  }
+  return out;
+}
+
+/**
+ * Tells people at a company. With `uid` it goes to that one person; with `role` to everyone in the company who has
+ * that role; with neither, to everyone in the company. Each person gets an inbox record and a push message.
+ */
+async function notify(orgId: string, title: string, body: string, role?: Role, detail = '', uid?: string) {
+  try {
+    let uids: string[];
+    if (uid) uids = [uid];
+    else {
+      const users = await db.collection('users').where('orgId', '==', orgId).get();
+      uids = users.docs.filter((d) => !role || d.get('role') === role).map((d) => d.id);
+    }
+    if (!uids.length) return;
+    const batch = db.batch();
+    uids.forEach((u) => batch.set(db.collection('notices').doc(), { uid: u, orgId, title, body, detail, createdAt: FieldValue.serverTimestamp() }));
+    await batch.commit();
+    await sendPush(await tokensForUids(uids), title, body);
+  } catch (e) {
+    Sentry.captureException(e);
+  }
+}
+
+/** Tells the platform owner (push only; the owner works in the web dashboard). */
+async function notifyOwners(title: string, body: string) {
+  try {
+    const snap = await db.collection('pushTokens').where('role', '==', 'admin').get();
+    await sendPush(snap.docs.map((d) => d.get('token') as string), title, body);
+  } catch (e) {
+    Sentry.captureException(e);
+  }
 }
 
 async function nextIncidentId(tx: Transaction): Promise<string> {
@@ -110,7 +181,31 @@ export const registerAccount = onCall(async (req) => {
 
   await auth.setCustomUserClaims(req.auth.uid, { role, orgId: orgRef.id });
   await notify(orgRef.id, 'Account under review', 'Tsela Assist is checking your details. We will notify you when you are approved.');
+  await notifyOwners('New company to review', `${business} (${kind === 'fleet' ? 'fleet company' : 'mechanic'}) wants to join Tsela Assist.`);
   return { orgId: orgRef.id, role, status: 'pending' };
+});
+
+/**
+ * Saves this phone's push token so it can receive alerts while the app is closed. Called by the app after sign-in.
+ * One record per phone; signing in as someone else on the same phone moves it to the new person.
+ */
+export const registerPushToken = onCall(async (req) => {
+  const me = caller(req, ['admin', 'manager', 'driver', 'repairer']);
+  const token = str(req.data?.token, 'token', 300);
+  if (!/^Expo(nent)?PushToken\[.+\]$/.test(token)) throw new HttpsError('invalid-argument', 'That is not a push token.');
+  const platform = req.data?.platform === 'ios' ? 'ios' : 'android';
+  await db.doc(`pushTokens/${pushDocId(token)}`).set({ token, uid: me.uid, orgId: me.orgId, role: me.role, platform, updatedAt: FieldValue.serverTimestamp() });
+  return { ok: true };
+});
+
+/** Called on sign-out so the next person on this phone does not get the previous person's alerts. */
+export const removePushToken = onCall(async (req) => {
+  const me = caller(req, ['admin', 'manager', 'driver', 'repairer']);
+  const token = str(req.data?.token, 'token', 300);
+  const ref = db.doc(`pushTokens/${pushDocId(token)}`);
+  const snap = await ref.get();
+  if (snap.exists && snap.get('uid') === me.uid) await ref.delete();
+  return { ok: true };
 });
 
 /** Owner approves, suspends or re-activates a company or mechanic. */
@@ -123,6 +218,7 @@ export const reviewOrg = onCall(async (req) => {
   if (!(await ref.get()).exists) throw new HttpsError('not-found', 'Company not found.');
   await ref.update({ status });
   if (status === 'active') await notify(orgId, 'You are approved', 'Your Tsela Assist account is live.');
+  if (status === 'suspended') await notify(orgId, 'Account suspended', 'Your Tsela Assist account has been suspended. Contact support.');
   return { ok: true };
 });
 
@@ -230,7 +326,9 @@ export const requestMechanic = onCall(async (req) => {
 export const cancelRequest = onCall(async (req) => {
   const me = caller(req, ['manager']);
   const incidentId = await pickIncident(me.orgId, req.data?.incidentId, ['matching']);
+  const was = (await db.doc(`incidents/${incidentId}`).get()).get('requestedMechanicId') as string | null;
   await db.doc(`incidents/${incidentId}`).update({ status: 'reported', requestedMechanicId: null, updatedAt: FieldValue.serverTimestamp() });
+  if (was) await notify(was, 'Request withdrawn', `The fleet withdrew call-out ${incidentId}.`, 'repairer');
   return { incidentId };
 });
 
@@ -276,7 +374,11 @@ export const respondToRequest = onCall(async (req) => {
     }
     return snap.get('fleetId') as string;
   });
-  await notify(fleetId, accept ? 'Mechanic on the way' : 'Request declined', `${incidentId} was ${accept ? 'accepted' : 'declined'}.`, 'manager');
+  await notify(fleetId, accept ? 'Mechanic accepted' : 'Request declined', `${incidentId} was ${accept ? 'accepted' : 'declined'}.`, 'manager');
+  if (accept) {
+    const inc = (await ref.get()).data();
+    if (inc?.driverUid) await notify(fleetId, 'Mechanic assigned', `${inc.mechanicName ?? 'A mechanic'} accepted your report ${incidentId}.`, 'driver', '', inc.driverUid as string);
+  }
   return { ok: true };
 });
 
@@ -296,6 +398,14 @@ export const updateJob = onCall(async (req) => {
     return snap.get('fleetId') as string;
   });
   await notify(fleetId, `Job ${incidentId}: ${to}`, `Your mechanic marked ${incidentId} as ${to}.`, 'manager');
+  // The driver follows the same progress: on the way, arrived, finished.
+  const driverUid = (await ref.get()).get('driverUid') as string | undefined;
+  const say = ({
+    enroute: ['Mechanic on the way', 'Your mechanic is heading to you.'],
+    onsite: ['Mechanic has arrived', 'Your mechanic is with the truck.'],
+    completed: ['Repair finished', 'The repair is done.'],
+  } as Record<string, string[]>)[to];
+  if (driverUid && say) await notify(fleetId, say[0], `${say[1]} (${incidentId})`, 'driver', '', driverUid);
   return { ok: true };
 });
 
@@ -443,6 +553,9 @@ export const approveInvoice = onCall(async (req) => {
 export const markSettlementPaid = onCall(async (req) => {
   caller(req, ['admin']);
   const id = str(req.data?.settlementId, 'settlementId');
-  await db.doc(`settlements/${id}`).update({ status: 'paid', paidAt: FieldValue.serverTimestamp() });
+  const ref = db.doc(`settlements/${id}`);
+  const repairerId = (await ref.get()).get('repairerId') as string | undefined;
+  await ref.update({ status: 'paid', paidAt: FieldValue.serverTimestamp() });
+  if (repairerId) await notify(repairerId, 'Payout released', 'Tsela Assist has released a payout to you.', 'repairer');
   return { ok: true };
 });

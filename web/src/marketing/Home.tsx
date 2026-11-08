@@ -18,8 +18,6 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Splash from './Splash'
 
-const WEB_APP_URL = 'https://tsela.expo.app'
-
 const hero = [
   { icon: BadgeCheck, text: 'Every mechanic verified by Tsela Assist before going live' },
   { icon: MapPin, text: 'Matched by distance, so the nearest help responds first' },
@@ -195,12 +193,6 @@ export default function Home() {
               className="inline-flex h-12 items-center gap-2 rounded-md border border-white/70 px-6 text-sm font-semibold hover:bg-white hover:text-navy"
             >
               Get early access <ArrowRight size={16} aria-hidden />
-            </a>
-            <a
-              href={WEB_APP_URL}
-              className="inline-flex h-12 items-center gap-2 rounded-md bg-brand px-6 text-sm font-semibold hover:bg-brand-dark"
-            >
-              Open the web app
             </a>
             <Link
               to="/download"
@@ -437,7 +429,7 @@ export default function Home() {
           >
             TSELA ASSIST
           </span>
-          <div className="relative mx-auto grid max-w-6xl gap-10 px-4 lg:grid-cols-[1fr_20rem]">
+          <div className="relative mx-auto grid max-w-6xl gap-10 px-4 ">
             <div>
               <p className="font-display text-sm font-bold tracking-widest text-lime">GET EARLY ACCESS</p>
               <h2 className="mt-2 font-display text-3xl font-extrabold tracking-tight sm:text-4xl">Be first to know</h2>
@@ -496,21 +488,6 @@ export default function Home() {
               )}
             </div>
 
-            <aside className="h-fit rounded-md bg-white/[0.08] p-6 backdrop-blur">
-              <p className="flex items-center gap-3 font-display text-lg font-extrabold">
-                <span className="h-px w-8 bg-lime" /> Try it now
-              </p>
-              <p className="mt-4 text-sm text-white/75">
-                The web app works on any phone or computer. On iPhone, open it in Safari and choose Share, then
-                Add to Home Screen.
-              </p>
-              <a
-                href={WEB_APP_URL}
-                className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-md bg-brand text-sm font-semibold hover:bg-brand-dark"
-              >
-                Open the web app
-              </a>
-            </aside>
           </div>
         </section>
       </main>

@@ -13,3 +13,5 @@ web-build/
 # large media, keep out of GitHub
 /shared/videos/
 /shared/*.pdf
+docs/guide/
+web/public/videos/*.mp4

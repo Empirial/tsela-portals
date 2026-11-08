@@ -9,7 +9,10 @@ export default function Overview() {
   const { settings } = useSettings()
   const { fleets, jobs, mechanics, gmv } = useLive()
 
-  const take = (gmv * settings.feePct) / 100
+  // The platform's cut is the fee actually charged on each cleared job, taken from the ex-VAT subtotal.
+  const take = jobs
+    .filter((j) => j.status === 'Bank cleared')
+    .reduce((sum, j) => sum + (j.invoice ? j.invoice.fee : (j.gross * settings.feePct) / 100), 0)
   const active = jobs.filter((j) => j.status !== 'Bank cleared').length
   const cleared = jobs.length - active
   const driverCount = fleets.reduce((a, f) => a + f.drivers, 0)

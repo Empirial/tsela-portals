@@ -1,0 +1,11 @@
+{
+  "name": "tsela-assist-backend",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix functions install",
+    "build": "npm --prefix functions run build",
+    "emulators": "node run.mjs emulators",
+    "seed": "npm --prefix functions run seed",
+    "test:backend": "node run.mjs test"
+  }
+}

@@ -1,0 +1,105 @@
+rules_version = '2';
+
+// Tsela Assist Firestore rules.
+// Principle: clients can READ what belongs to their organisation, and almost nothing can be WRITTEN
+// directly. Every state change in the dispatch lifecycle (reports, requests, jobs, invoices, payouts)
+// goes through a Cloud Function so money and status can't be tampered with from a device.
+//
+// Custom claims set by the backend: role ('admin' | 'manager' | 'driver' | 'repairer') and orgId.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function role() { return request.auth.token.role; }
+    function orgId() { return request.auth.token.orgId; }
+    function isAdmin() { return signedIn() && role() == 'admin'; }
+    function inOrg(id) { return signedIn() && orgId() == id; }
+    function isManagerOf(id) { return signedIn() && role() == 'manager' && orgId() == id; }
+
+    // Platform settings (fee %, VAT %, coverage areas): everyone signed in reads, only the owner edits.
+    match /settings/{doc} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow write: if false;
+    }
+
+    match /orgs/{id} {
+      // Members see their own org, the owner sees all, and fleet managers can browse active repairers.
+      allow read: if isAdmin()
+        || inOrg(id)
+        || (signedIn() && role() == 'manager'
+            && resource.data.type == 'repairer' && resource.data.status == 'active');
+      // Owner approval / suspension and edits to org details.
+      allow update: if isAdmin();
+      allow create, delete: if false;
+
+      // Verification documents (CIPC, VAT, insurance ...). One record per document kind. The company uploads
+      // the file to Storage and writes the record with status 'review'; only the owner can approve or reject.
+      match /documents/{kind} {
+        allow read: if isAdmin() || inOrg(id);
+        allow create, update: if (isManagerOf(id) || (signedIn() && role() == 'repairer' && orgId() == id))
+          && request.resource.data.keys().hasOnly(['kind', 'path', 'contentType', 'status', 'uploadedAt'])
+          && request.resource.data.kind == kind
+          && request.resource.data.status == 'review'
+          && request.resource.data.path.matches('documents/' + id + '/.*')
+          && request.resource.data.uploadedAt == request.time;
+        allow update: if isAdmin()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'reason', 'reviewedAt'])
+          && request.resource.data.status in ['verified', 'rejected'];
+        allow delete: if false;
+      }
+
+      match /trucks/{reg} {
+        allow read: if isAdmin() || inOrg(id);
+        allow create, update: if isManagerOf(id)
+          && request.resource.data.keys().hasOnly(['reg', 'model', 'tyres', 'wheels', 'driver', 'status']);
+        allow delete: if isManagerOf(id);
+      }
+
+      match /drivers/{uid} {
+        allow read: if isAdmin() || inOrg(id);
+        // Drivers are created by a Cloud Function (it also creates their login).
+        // Managers may only flip the reporting permission and assign a truck.
+        allow update: if isManagerOf(id)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['canReport', 'truckReg']);
+        allow create, delete: if false;
+      }
+    }
+
+    match /incidents/{id} {
+      allow read: if isAdmin()
+        || (signedIn() && role() == 'manager' && resource.data.fleetId == orgId())
+        || (signedIn() && role() == 'driver' && resource.data.driverUid == request.auth.uid)
+        || (signedIn() && role() == 'repairer'
+            && (resource.data.mechanicId == orgId() || resource.data.requestedMechanicId == orgId()));
+      allow write: if false;
+    }
+
+    match /invoices/{id} {
+      allow read: if isAdmin()
+        || (signedIn() && role() == 'manager' && resource.data.fleetId == orgId())
+        || (signedIn() && role() == 'repairer' && resource.data.repairerId == orgId());
+      allow write: if false;
+    }
+
+    match /settlements/{id} {
+      allow read: if isAdmin() || (signedIn() && role() == 'repairer' && resource.data.repairerId == orgId());
+      allow write: if false;
+    }
+
+    // Each person has their own inbox: one record per person, written by the backend. The app reads
+    // them with where('uid', '==', <own uid>).
+    match /notices/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
