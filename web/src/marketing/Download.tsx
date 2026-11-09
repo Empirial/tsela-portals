@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { ArrowLeft, Download as DownloadIcon, Monitor, PlayCircle, ShieldCheck, Smartphone } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-// The APK is ~100 MB, over GitHub's file limit, so it is served from a GitHub Release.
-// Upload the file to a release as "tsela.apk" and this link always points at the newest one.
-const APK_URL = 'https://github.com/Empirial/tsela-portals/releases/latest/download/tsela.apk'
+// The APK (~115 MB) and walkthrough videos are over GitHub's file limit, so they are served from a GitHub Release.
+// Upload each file to a release under the exact name below and these links always point at the newest one.
+const RELEASE = 'https://github.com/Empirial/tsela-portals/releases/latest/download'
+const APK_URL = `${RELEASE}/tsela.apk`
 
 const steps = [
   'Tap Download APK below on your Android phone.',
@@ -16,14 +17,14 @@ const videos = {
   phone: {
     label: 'On a phone',
     icon: Smartphone,
-    src: '/videos/tsela-walkthrough-phone.mp4',
+    src: `${RELEASE}/Tsela-Assist-Walkthrough-Phone-Narrated.mp4`,
     poster: '/videos/tsela-walkthrough-phone.jpg',
     box: 'mx-auto aspect-[860/1864] w-full max-w-[280px]',
   },
   desktop: {
     label: 'On a computer',
     icon: Monitor,
-    src: '/videos/tsela-walkthrough-desktop.mp4',
+    src: `${RELEASE}/Tsela-Assist-Walkthrough-Desktop-Narrated.mp4`,
     poster: '/videos/tsela-walkthrough-desktop.jpg',
     box: 'aspect-video w-full',
   },
@@ -104,7 +105,7 @@ export default function Download() {
             <img src="/logo.png" alt="" className="h-16 w-16 rounded-2xl bg-white p-1.5" />
             <div>
               <p className="font-display text-xl font-extrabold">Tsela Assist</p>
-              <p className="text-sm text-white/70">Android app (APK) • about 102 MB</p>
+              <p className="text-sm text-white/70">Android app (APK) • about 115 MB</p>
             </div>
           </div>
           <a
