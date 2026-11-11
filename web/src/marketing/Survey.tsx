@@ -1,22 +1,16 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
-import { ArrowLeft, ArrowRight, CheckCircle2, Clock, Send, Truck, Wrench } from 'lucide-react'
+import { ArrowRight, CheckCircle2, Clock, Send, Truck, Wrench } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { submitSurvey, type Answers } from '../lib/survey'
+import { SiteFooter, SiteHeader } from './SiteChrome'
 import { surveyBySlug, surveys, type Question, type Survey } from './surveyData'
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-deep text-white">
-      <header className="mx-auto flex h-20 max-w-2xl items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="" className="h-11 w-auto rounded-xl bg-white p-1" />
-          <span className="font-display text-xl font-extrabold">Tsela Assist</span>
-        </Link>
-        <Link to="/" className="inline-flex items-center gap-2 text-sm font-semibold text-white/80 hover:text-white">
-          <ArrowLeft size={16} aria-hidden /> Back to site
-        </Link>
-      </header>
-      <main className="mx-auto max-w-2xl px-4 pt-6 pb-20">{children}</main>
+      <SiteHeader />
+      <main className="mx-auto max-w-6xl px-4 pt-12 pb-20">{children}</main>
+      <SiteFooter />
     </div>
   )
 }
@@ -29,16 +23,16 @@ export function SurveyIndex() {
   const icons = { merchants: Wrench, customers: Truck }
   return (
     <Shell>
-      <h1 className="font-display text-4xl leading-tight font-extrabold tracking-tight">Help shape Tsela Assist</h1>
-      <p className="mt-4 text-lg text-white/80">Two short surveys, about 3 minutes each. Pick the one that fits you.</p>
-      <div className="mt-8 flex flex-col gap-4">
+      <h1 className="font-display text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl">Help shape Tsela Assist</h1>
+      <p className="mt-4 max-w-xl text-lg text-white/80">Two short surveys, about 3 minutes each. Pick the one that fits you.</p>
+      <div className="mt-8 grid gap-4 md:grid-cols-2">
         {surveys.map((s) => {
           const Icon = icons[s.slug]
           return (
             <Link
               key={s.slug}
               to={`/survey/${s.slug}`}
-              className="group flex items-start gap-4 rounded-md bg-white/[0.08] p-5 hover:bg-white/[0.12] focus-visible:outline-2 focus-visible:outline-lime"
+              className="group flex h-full items-start gap-4 rounded-md bg-white/[0.08] p-5 hover:bg-white/[0.12] focus-visible:outline-2 focus-visible:outline-lime"
             >
               <Icon size={24} className="mt-1 shrink-0 text-lime" aria-hidden />
               <span className="flex-1">
@@ -132,7 +126,7 @@ function QuestionBlock({
           className={`${field} mt-2 py-3`}
         />
       ) : (
-        <div className="mt-2 flex flex-col gap-2">
+        <div className={`mt-2 grid gap-2 ${q.options!.length >= 4 ? 'md:grid-cols-2' : ''}`}>
           {q.options!.map((o) => (
             <Choice
               key={o}
@@ -151,7 +145,7 @@ function QuestionBlock({
               onChange={(e) => setAnswer(`${q.id}_other`, e.target.value)}
               placeholder="Please specify"
               maxLength={200}
-              className={`${field} h-12`}
+              className={`${field} h-12 md:col-span-2`}
             />
           )}
         </div>
@@ -169,6 +163,26 @@ const isAnswered = (q: Question, a: Answers) => {
   const v = a[q.id]
   if (q.type === 'multi') return Array.isArray(v) && v.length > 0
   return typeof v === 'string' && v.trim().length > 0
+}
+
+function Progress({ answered, total }: { answered: number; total: number }) {
+  return (
+    <div>
+      <div
+        role="progressbar"
+        aria-label="Questions answered"
+        aria-valuemin={0}
+        aria-valuemax={total}
+        aria-valuenow={answered}
+        className="h-2 overflow-hidden rounded-full bg-white/15"
+      >
+        <div className="h-full bg-lime transition-[width]" style={{ width: `${(answered / total) * 100}%` }} />
+      </div>
+      <p className="mt-2 text-sm text-white/70">
+        {answered} of {total} questions answered
+      </p>
+    </div>
+  )
 }
 
 function SurveyForm({ survey }: { survey: Survey }) {
@@ -218,7 +232,7 @@ function SurveyForm({ survey }: { survey: Survey }) {
   if (done) {
     return (
       <Shell>
-        <div className="rounded-md bg-white/[0.08] p-8 text-center">
+        <div className="mx-auto max-w-2xl rounded-md bg-white/[0.08] p-8 text-center">
           <CheckCircle2 size={48} className="mx-auto text-lime" aria-hidden />
           <h1 className="mt-4 font-display text-3xl font-extrabold">Thank you</h1>
           <p className="mt-3 text-white/85">{survey.thanks}</p>
@@ -240,18 +254,23 @@ function SurveyForm({ survey }: { survey: Survey }) {
       <p className="flex items-center gap-3 text-sm font-bold tracking-wide text-lime uppercase">
         <span className="h-px w-8 bg-lime" /> {survey.kicker}
       </p>
-      <h1 className="mt-4 font-display text-4xl leading-tight font-extrabold tracking-tight">{survey.title}</h1>
-      <p className="mt-3 text-lg font-semibold text-white/90">{survey.tagline}</p>
-      {survey.intro.map((p) => (
-        <p key={p} className="mt-3 text-white/80">
-          {p}
-        </p>
-      ))}
+      <h1 className="mt-4 max-w-3xl font-display text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl">
+        {survey.title}
+      </h1>
+      <p className="mt-3 max-w-3xl text-lg font-semibold text-white/90">{survey.tagline}</p>
+      <div className="max-w-3xl">
+        {survey.intro.map((p) => (
+          <p key={p} className="mt-3 text-white/80">
+            {p}
+          </p>
+        ))}
+      </div>
       <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/[0.08] px-4 py-2 text-sm font-semibold">
         <Clock size={16} className="text-lime" aria-hidden /> Estimated completion time: {survey.minutes} minutes
       </p>
 
-      <form onSubmit={onSubmit} noValidate className="mt-10 flex flex-col gap-10">
+      <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-14">
+      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-10">
         {/* Trap field for bots: people never see it. */}
         <div aria-hidden className="absolute -left-[9999px]">
           <label>
@@ -276,19 +295,9 @@ function SurveyForm({ survey }: { survey: Survey }) {
         })}
 
         <div className="flex flex-col gap-3">
-          <div
-            role="progressbar"
-            aria-label="Questions answered"
-            aria-valuemin={0}
-            aria-valuemax={total}
-            aria-valuenow={answered}
-            className="h-2 overflow-hidden rounded-full bg-white/15"
-          >
-            <div className="h-full bg-lime transition-[width]" style={{ width: `${(answered / total) * 100}%` }} />
+          <div className="lg:hidden">
+            <Progress answered={answered} total={total} />
           </div>
-          <p className="text-sm text-white/70">
-            {answered} of {total} questions answered
-          </p>
           {failed && (
             <p role="alert" className="text-sm font-semibold text-amber">
               We could not send your answers. Check your connection and try again.
@@ -304,6 +313,18 @@ function SurveyForm({ survey }: { survey: Survey }) {
           <p className="text-sm text-white/60">{survey.note}</p>
         </div>
       </form>
+
+      <aside className="hidden rounded-md bg-white/[0.08] p-6 lg:sticky lg:top-28 lg:block">
+        <p className="font-display text-lg font-extrabold">Your progress</p>
+        <div className="mt-4">
+          <Progress answered={answered} total={total} />
+        </div>
+        <p className="mt-6 flex items-center gap-2 text-sm text-white/80">
+          <Clock size={16} className="text-lime" aria-hidden /> About {survey.minutes} minutes
+        </p>
+        <p className="mt-4 text-sm text-white/60">{survey.note}</p>
+      </aside>
+      </div>
     </Shell>
   )
 }
