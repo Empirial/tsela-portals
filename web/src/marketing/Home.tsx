@@ -144,6 +144,9 @@ export default function Home() {
                   {l}
                 </a>
               ))}
+              <Link to="/survey" className="text-sm font-semibold text-white/80 hover:text-white">
+                Survey
+              </Link>
             </nav>
             <div className="flex items-center gap-3">
               <Link to="/admin/login" className="hidden text-sm font-semibold text-white/80 hover:text-white sm:inline">
@@ -166,6 +169,9 @@ export default function Home() {
                   {l}
                 </a>
               ))}
+              <Link to="/survey" onClick={() => setMenu(false)} className="py-3 text-sm font-semibold">
+                Survey
+              </Link>
               <Link to="/admin/login" className="py-3 text-sm font-semibold">
                 Owner sign in
               </Link>
