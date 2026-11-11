@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { ArrowRight, CheckCircle2, Clock, Send, Truck, Wrench } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { submitSurvey, type Answers } from '../lib/survey'
+import { submitSurvey, type Answers, type SurveyContact } from '../lib/survey'
 import { SiteFooter, SiteHeader } from './SiteChrome'
 import { surveyBySlug, surveys, type Question, type Survey } from './surveyData'
 
@@ -165,6 +165,133 @@ const isAnswered = (q: Question, a: Answers) => {
   return typeof v === 'string' && v.trim().length > 0
 }
 
+type ContactErrors = Partial<Record<keyof SurveyContact, string>>
+
+function ContactSection({
+  survey,
+  contact,
+  setContact,
+  errors,
+}: {
+  survey: Survey
+  contact: SurveyContact
+  setContact: (c: SurveyContact) => void
+  errors: ContactErrors
+}) {
+  const merchant = survey.slug === 'merchants'
+  const set = (k: keyof SurveyContact, v: string | boolean) => setContact({ ...contact, [k]: v })
+  const Err = ({ k }: { k: keyof SurveyContact }) =>
+    errors[k] ? (
+      <p id={`e-contact-${k}`} role="alert" className="mt-1 text-sm font-semibold text-amber">
+        {errors[k]}
+      </p>
+    ) : null
+  const lab = 'mb-1 block text-sm font-semibold text-white/90'
+
+  return (
+    <section id="q-contact" className="flex scroll-mt-6 flex-col gap-4">
+      <h2 className="border-b border-white/15 pb-2 font-display text-sm font-extrabold tracking-wide text-lime uppercase">
+        Your contact details
+      </h2>
+      <p className="text-sm text-white/70">
+        So that we can follow up with you. We only use these details to contact you about Tsela Assist.
+      </p>
+      <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <label htmlFor="c-name" className={lab}>
+            Full name
+          </label>
+          <input
+            id="c-name"
+            autoComplete="name"
+            value={contact.name}
+            onChange={(e) => set('name', e.target.value)}
+            maxLength={100}
+            aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? 'e-contact-name' : undefined}
+            className={`${field} h-12`}
+          />
+          <Err k="name" />
+        </div>
+        <div>
+          <label htmlFor="c-phone" className={lab}>
+            Mobile or WhatsApp number
+          </label>
+          <input
+            id="c-phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            value={contact.phone}
+            onChange={(e) => set('phone', e.target.value)}
+            maxLength={30}
+            placeholder="e.g. 082 123 4567"
+            aria-invalid={!!errors.phone}
+            aria-describedby={errors.phone ? 'e-contact-phone' : undefined}
+            className={`${field} h-12`}
+          />
+          <Err k="phone" />
+        </div>
+        <div>
+          <label htmlFor="c-email" className={lab}>
+            Email address <span className="font-normal text-white/60">(optional)</span>
+          </label>
+          <input
+            id="c-email"
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            value={contact.email}
+            onChange={(e) => set('email', e.target.value)}
+            maxLength={150}
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? 'e-contact-email' : undefined}
+            className={`${field} h-12`}
+          />
+          <Err k="email" />
+        </div>
+        <div>
+          <label htmlFor="c-business" className={lab}>
+            {merchant ? 'Business name' : 'Company or organisation'}{' '}
+            {!merchant && <span className="font-normal text-white/60">(optional)</span>}
+          </label>
+          <input
+            id="c-business"
+            autoComplete="organization"
+            value={contact.business}
+            onChange={(e) => set('business', e.target.value)}
+            maxLength={150}
+            aria-invalid={!!errors.business}
+            aria-describedby={errors.business ? 'e-contact-business' : undefined}
+            className={`${field} h-12`}
+          />
+          <Err k="business" />
+        </div>
+      </div>
+      <div>
+        <label
+          className={`flex cursor-pointer items-start gap-3 rounded-md border px-4 py-3 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-lime ${
+            contact.consent ? 'border-lime bg-lime/10' : 'border-white/20 bg-white/[0.06]'
+          }`}
+        >
+          <input
+            type="checkbox"
+            checked={contact.consent}
+            onChange={(e) => set('consent', e.target.checked)}
+            aria-describedby={errors.consent ? 'e-contact-consent' : undefined}
+            className="mt-1 h-5 w-5 shrink-0 accent-lime"
+          />
+          <span className="text-sm text-white/90">
+            I agree that Tsela Assist may contact me about my answers and the Tsela Assist platform, and store my
+            details for that purpose.
+          </span>
+        </label>
+        <Err k="consent" />
+      </div>
+    </section>
+  )
+}
+
 function Progress({ answered, total }: { answered: number; total: number }) {
   return (
     <div>
@@ -191,6 +318,8 @@ function SurveyForm({ survey }: { survey: Survey }) {
   const [sending, setSending] = useState(false)
   const [failed, setFailed] = useState(false)
   const [done, setDone] = useState(false)
+  const [contact, setContact] = useState<SurveyContact>({ name: '', phone: '', email: '', business: '', consent: false })
+  const [contactErrors, setContactErrors] = useState<ContactErrors>({})
 
   useEffect(() => {
     document.title = `${survey.title} | Tsela Assist`
@@ -212,14 +341,23 @@ function SurveyForm({ survey }: { survey: Survey }) {
 
     const gaps = survey.questions.filter((q) => !isAnswered(q, answers)).map((q) => q.id)
     setMissing(gaps)
-    if (gaps.length) {
-      document.getElementById(`q-${gaps[0]}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    const errs: ContactErrors = {}
+    if (!contact.name.trim()) errs.name = 'Please enter your name.'
+    if (contact.phone.replace(/\D/g, '').length < 9) errs.phone = 'Please enter a valid phone number.'
+    if (contact.email.trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(contact.email.trim()))
+      errs.email = 'That email address does not look right.'
+    if (survey.slug === 'merchants' && !contact.business.trim()) errs.business = 'Please enter your business name.'
+    if (!contact.consent) errs.consent = 'Please tick the box so we can contact you.'
+    setContactErrors(errs)
+    if (gaps.length || Object.keys(errs).length) {
+      const target = gaps.length ? `q-${gaps[0]}` : 'q-contact'
+      document.getElementById(target)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
       return
     }
     setSending(true)
     setFailed(false)
     try {
-      await submitSurvey({ survey: survey.slug, answers, submittedAt: new Date().toISOString() })
+      await submitSurvey({ survey: survey.slug, answers, contact })
       setDone(true)
       window.scrollTo(0, 0)
     } catch {
@@ -293,6 +431,16 @@ function SurveyForm({ survey }: { survey: Survey }) {
             </section>
           )
         })}
+
+        <ContactSection
+          survey={survey}
+          contact={contact}
+          setContact={(c) => {
+            setContact(c)
+            setContactErrors({})
+          }}
+          errors={contactErrors}
+        />
 
         <div className="flex flex-col gap-3">
           <div className="lg:hidden">

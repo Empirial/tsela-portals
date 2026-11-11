@@ -6,6 +6,7 @@ import Login from './admin/Login'
 import Overview from './admin/Overview'
 import Payments from './admin/Payments'
 import SettingsPage from './admin/SettingsPage'
+import Surveys from './admin/Surveys'
 import FleetDetail from './admin/FleetDetail'
 import MechanicDetail from './admin/MechanicDetail'
 import { FleetsPage, MechanicsPage } from './admin/Users'
@@ -36,6 +37,7 @@ export default function App() {
             <Route path="mechanics/:id" element={<MechanicDetail />} />
             <Route path="fleets/:id" element={<FleetDetail />} />
             <Route path="drivers" element={<Navigate to="/admin/fleets" replace />} />
+            <Route path="surveys" element={<Surveys />} />
             <Route path="payments" element={<Payments />} />
             <Route path="subscriptions" element={<Navigate to="/admin/payments?tab=subs" replace />} />
             <Route path="settings" element={<SettingsPage />} />

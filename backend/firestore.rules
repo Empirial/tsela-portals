@@ -98,6 +98,16 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Website survey responses. Created by the submitSurvey function; only the owner reads them and may
+    // mark one as followed up (status) or add a note.
+    match /surveys/{id} {
+      allow read: if isAdmin();
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'note'])
+        && request.resource.data.status in ['new', 'contacted', 'closed'];
+      allow create, delete: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

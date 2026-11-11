@@ -208,6 +208,60 @@ export const removePushToken = onCall(async (req) => {
   return { ok: true };
 });
 
+const SURVEY_NAMES: Record<string, string> = { merchants: 'merchant', customers: 'customer and fleet' };
+
+/**
+ * Public survey form on the website (no sign-in). Saves the answers plus the person's contact details into
+ * `surveys` for the owner to follow up in the dashboard. Input is validated and capped; one network address
+ * can send at most 20 a hour.
+ */
+export const submitSurvey = onCall(async (req) => {
+  const d = (req.data ?? {}) as Record<string, unknown>;
+  const survey = typeof d.survey === 'string' ? d.survey : '';
+  if (!SURVEY_NAMES[survey]) throw new HttpsError('invalid-argument', 'Unknown survey.');
+
+  const c = (d.contact ?? {}) as Record<string, unknown>;
+  const name = str(c.name, 'Your name', 100);
+  const phone = str(c.phone, 'Your phone number', 30);
+  if (phone.replace(/\D/g, '').length < 9) throw new HttpsError('invalid-argument', 'Enter a valid phone number.');
+  const email = typeof c.email === 'string' ? c.email.trim().slice(0, 150) : '';
+  if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new HttpsError('invalid-argument', 'That email address is not valid.');
+  const business = typeof c.business === 'string' ? c.business.trim().slice(0, 150) : '';
+  if (survey === 'merchants' && !business) throw new HttpsError('invalid-argument', 'Business name is required.');
+  if (c.consent !== true) throw new HttpsError('invalid-argument', 'Please agree to be contacted.');
+
+  const raw = (d.answers ?? {}) as Record<string, unknown>;
+  const answers: Record<string, string | string[]> = {};
+  for (const [k, v] of Object.entries(raw).slice(0, 20)) {
+    if (!/^[a-z_]{1,40}$/.test(k)) continue;
+    if (typeof v === 'string') answers[k] = v.trim().slice(0, 2000);
+    else if (Array.isArray(v)) answers[k] = v.filter((x): x is string => typeof x === 'string').slice(0, 20).map((x) => x.slice(0, 200));
+  }
+  if (!Object.keys(answers).length) throw new HttpsError('invalid-argument', 'Please answer the questions.');
+
+  const forwarded = String(req.rawRequest.headers['x-forwarded-for'] ?? req.rawRequest.ip ?? '').split(',')[0].trim();
+  const ipHash = createHash('sha256').update(forwarded).digest('hex');
+  const since = Date.now() - 60 * 60 * 1000;
+  const recent = await db.collection('surveys').where('ipHash', '==', ipHash).get();
+  const lately = recent.docs.filter((x) => ((x.get('createdAt') as { toMillis?: () => number } | undefined)?.toMillis?.() ?? 0) > since);
+  if (lately.length >= 20) throw new HttpsError('resource-exhausted', 'Too many responses from this connection. Try again later.');
+
+  await db.collection('surveys').add({
+    survey,
+    name,
+    phone,
+    email,
+    business,
+    answers,
+    status: 'new',
+    note: '',
+    ipHash,
+    createdAt: FieldValue.serverTimestamp(),
+  });
+  await notifyOwners('New survey response', `${name}${business ? ` (${business})` : ''} completed the ${SURVEY_NAMES[survey]} survey.`);
+  return { ok: true };
+});
+
 /** Owner approves, suspends or re-activates a company or mechanic. */
 export const reviewOrg = onCall(async (req) => {
   caller(req, ['admin']);

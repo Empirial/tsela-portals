@@ -2,6 +2,7 @@ import {
   BadgeDollarSign,
   Bell,
   Building2,
+  ClipboardList,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -29,6 +30,7 @@ const groups = [
     items: [
       { to: '/admin/fleets', label: 'Fleet Companies', icon: Building2 },
       { to: '/admin/mechanics', label: 'Truck Mechanics', icon: Wrench },
+      { to: '/admin/surveys', label: 'Survey Responses', icon: ClipboardList },
     ],
   },
   {
